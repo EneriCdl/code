@@ -1,11 +1,1465 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>妈妈，母亲节快乐</title>
+    <style>
+        :root {
+            --pink: #f8c8d4;
+            --pink-deep: #e8a0b4;
+            --peach: #fde4d0;
+            --warm-bg: #fff8f5;
+            --text: #5a3e3e;
+            --text-light: #8b6f6f;
+            --white: #ffffff;
+            --gold: #d4a574;
+            --circuit: rgba(180,160,150,0.07);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: var(--warm-bg);
+            color: var(--text);
+            line-height: 1.8;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            position: relative;
+        }
+
+        /* ========== 芯片电路板背景纹理 ========== */
+        body::before {
+            content: '';
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none; z-index: 0;
+            opacity: 0.85;
+            background-image:
+                /* 粗水平走线 */
+                linear-gradient(90deg, transparent 0%, transparent 97%, rgba(180,140,120,0.2) 97%, rgba(180,140,120,0.2) 100%),
+                /* 细水平走线 */
+                linear-gradient(90deg, transparent 0%, transparent 94%, rgba(170,130,110,0.14) 94%, rgba(170,130,110,0.14) 95%, transparent 95%),
+                /* 粗垂直走线 */
+                linear-gradient(transparent 0%, transparent 96%, rgba(180,140,120,0.18) 96%, rgba(180,140,120,0.18) 100%),
+                /* 细垂直走线 */
+                linear-gradient(transparent 0%, transparent 92%, rgba(170,130,110,0.12) 92%, rgba(170,130,110,0.12) 93%, transparent 93%),
+                /* 45度斜线 - 芯片引脚走线 */
+                repeating-linear-gradient(-55deg, transparent, transparent 28px, rgba(160,130,110,0.12) 28px, rgba(160,130,110,0.12) 29px),
+                /* -45度斜线 */
+                repeating-linear-gradient(55deg, transparent, transparent 35px, rgba(160,130,110,0.1) 35px, rgba(160,130,110,0.1) 36px);
+            background-size:
+                35px 35px,
+                50px 50px,
+                45px 45px,
+                30px 30px,
+                60px 60px,
+                70px 70px;
+        }
+
+        /* 电路过孔节点 */
+        .circuit-node {
+            position: fixed; pointer-events: none; z-index: 0;
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: rgba(180,130,100,0.22);
+            box-shadow: 0 0 0 3px rgba(180,140,110,0.12), 0 0 0 6px rgba(170,130,100,0.06);
+        }
+
+        /* ========== 芯片角落装饰 ========== */
+        .chip-corner {
+            position: fixed; pointer-events: none; z-index: 2;
+            opacity: 0.55;
+        }
+        /* 左上角芯片 */
+        .chip-corner-tl {
+            top: 12px; left: 10px;
+            width: 70px; height: 70px;
+        }
+        /* 右下角芯片 */
+        .chip-corner-br {
+            bottom: 20px; right: 10px;
+            width: 80px; height: 80px;
+            transform: rotate(180deg);
+        }
+        .chip-square {
+            fill: none;
+            stroke: #c09070;
+            stroke-width: 1.2;
+            opacity: 0.7;
+        }
+        .chip-pin {
+            fill: rgba(190,140,100,0.5);
+        }
+        .chip-trace {
+            fill: none;
+            stroke: #c09878;
+            stroke-width: 0.8;
+            opacity: 0.6;
+        }
+        .chip-via {
+            fill: rgba(180,130,90,0.55);
+        }
+
+        /* 装饰性芯片标签 - 放在标题旁 */
+        .chip-icon-inline {
+            display: inline-block;
+            width: 18px; height: 18px;
+            vertical-align: middle;
+            margin: 0 2px;
+            position: relative;
+        }
+
+        /* ========== 飘落花瓣 ========== */
+        .petals-container {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none; z-index: 1000; overflow: hidden;
+        }
+        .petal {
+            position: absolute; top: -60px;
+            background: radial-gradient(ellipse at center, #ffd1dc 0%, #f8a5b8 60%, #f08090 100%);
+            border-radius: 50% 0 50% 0;
+            animation: petalFall linear infinite;
+            opacity: 0.7;
+        }
+        @keyframes petalFall {
+            0%   { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0.9; }
+            25%  { transform: translateY(25vh) rotate(90deg) translateX(30px); }
+            50%  { transform: translateY(50vh) rotate(180deg) translateX(-20px); opacity: 0.6; }
+            75%  { transform: translateY(75vh) rotate(270deg) translateX(40px); }
+            100% { transform: translateY(105vh) rotate(360deg) translateX(-10px); opacity: 0.2; }
+        }
+
+        /* ========== 背景装饰 ========== */
+        .bg-decoration {
+            position: fixed; border-radius: 50%; opacity: 0.05; pointer-events: none; z-index: 0;
+        }
+        .bg-circle-1 { width: 300px; height: 300px; background: #f8c8d4; top: -100px; right: -80px; }
+        .bg-circle-2 { width: 200px; height: 200px; background: #fde4d0; bottom: 10%; left: -60px; }
+        .bg-circle-3 { width: 250px; height: 250px; background: #f8c8d4; bottom: 30%; right: -100px; }
+
+        /* ========== 欢迎遮罩层 ========== */
+        .welcome-overlay {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(160deg, #fef0f3 0%, #fde4d0 40%, #fef5f0 100%);
+            z-index: 5000;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        .welcome-overlay.hidden {
+            opacity: 0; visibility: hidden; pointer-events: none;
+        }
+        .welcome-box {
+            text-align: center;
+            padding: 40px 28px;
+            background: rgba(255,255,255,0.75);
+            border-radius: 24px;
+            box-shadow: 0 8px 40px rgba(180, 130, 130, 0.12);
+            backdrop-filter: blur(10px);
+            max-width: 340px;
+            width: 85%;
+        }
+        .welcome-box .welcome-emoji {
+            font-size: 60px;
+            margin-bottom: 12px;
+            animation: gentleBounce 2s ease-in-out infinite;
+        }
+        @keyframes gentleBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .welcome-box h2 {
+            font-size: 24px; color: #c25a6a; margin-bottom: 8px; letter-spacing: 2px;
+        }
+        .welcome-box .hint {
+            font-size: 14px; color: #b08a8a; margin-bottom: 24px;
+        }
+        .welcome-input {
+            width: 100%; padding: 14px 18px;
+            border: 2px solid #f0d0d8; border-radius: 50px;
+            font-size: 17px; text-align: center; color: #5a3e3e;
+            background: #fffef9;
+            outline: none;
+            font-family: inherit;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            margin-bottom: 6px;
+        }
+        .welcome-input:focus { border-color: #e8a0b4; }
+        .welcome-input::placeholder { color: #d4b8b8; }
+        .welcome-input.error {
+            border-color: #e07070;
+            animation: inputShake 0.5s ease;
+        }
+        @keyframes inputShake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(4px); }
+        }
+        .error-hint {
+            font-size: 13px; color: #d4787e;
+            min-height: 20px; margin-bottom: 8px;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .error-hint.show { opacity: 1; }
+        .welcome-btn {
+            display: inline-block;
+            padding: 14px 44px;
+            font-size: 18px; letter-spacing: 3px;
+            color: #fff;
+            background: linear-gradient(135deg, #f0a0b0, #d4788e);
+            border: none; border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 24px rgba(200, 120, 140, 0.35);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        .welcome-btn:active { transform: scale(0.95); }
+
+        /* ========== 主容器 ========== */
+        .main-container {
+            position: relative; z-index: 1;
+            max-width: 500px; margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        /* ========== 动态欢迎文字 ========== */
+        .dynamic-welcome {
+            text-align: center;
+            font-size: 20px;
+            color: #c25a6a;
+            font-weight: 600;
+            letter-spacing: 2px;
+            padding: 18px 12px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.8s ease;
+            min-height: 30px;
+        }
+        .dynamic-welcome.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========== 芯片装饰标签 ========== */
+        .chip-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #9b7560;
+            letter-spacing: 1px;
+            background: rgba(190,150,120,0.18);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1.5px solid rgba(180,130,100,0.35);
+            margin-left: 4px;
+            vertical-align: middle;
+            font-weight: 600;
+        }
+        .chip-badge .chip-dot {
+            width: 6px; height: 6px;
+            background: #b87860;
+            border-radius: 50%;
+            animation: chipBlink 2s ease-in-out infinite;
+        }
+        @keyframes chipBlink {
+            0%, 100% { opacity: 0.5; box-shadow: 0 0 0 0 rgba(184,120,96,0.4); }
+            50% { opacity: 1; box-shadow: 0 0 0 3px rgba(184,120,96,0.3); }
+        }
+
+        /* ========== 鸟瞰图区域 ========== */
+        .map-section {
+            position: relative;
+            background: linear-gradient(180deg, #fef9f6 0%, #fef5ef 100%);
+            border-radius: 20px;
+            padding: 10px 14px 20px;
+            margin: 8px 0 24px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .map-section .map-title {
+            text-align: center;
+            font-size: 14px;
+            color: #c9a0a0;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .map-canvas-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 2.2 / 1;
+            background: linear-gradient(180deg, #fdf6ef 0%, #faf0e6 40%, #f7ede0 100%);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(180,150,130,0.1);
+        }
+        .map-grid {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image:
+                linear-gradient(rgba(200,170,150,0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(200,170,150,0.08) 1px, transparent 1px);
+            background-size: 12% 12%;
+        }
+        .map-terrain {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.13;
+        }
+        .map-terrain.t1 { width: 40%; height: 40%; background: #c8d8a0; top: 15%; left: 5%; }
+        .map-terrain.t2 { width: 35%; height: 35%; background: #b8c8a8; bottom: 10%; left: 30%; }
+        .map-terrain.t3 { width: 30%; height: 30%; background: #d0c8a8; top: 20%; right: 8%; }
+        .map-terrain.t4 { width: 25%; height: 25%; background: #c8d0b0; bottom: 5%; right: 25%; }
+        .map-river {
+            position: absolute;
+            height: 2px;
+            background: rgba(140, 180, 200, 0.18);
+            border-radius: 1px;
+            transform-origin: left center;
+        }
+
+        .city-marker {
+            position: absolute;
+            display: flex; flex-direction: column;
+            align-items: center;
+            z-index: 10;
+        }
+        .city-marker.jiangmen { bottom: 28%; left: 16%; }
+        .city-marker.shenzhen { bottom: 22%; right: 18%; }
+
+        .city-dot {
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background: #e07080;
+            box-shadow: 0 0 0 6px rgba(224,112,128,0.2), 0 0 0 12px rgba(224,112,128,0.08);
+            animation: cityPulse 2.5s ease-in-out infinite;
+        }
+        .city-marker.shenzhen .city-dot { animation-delay: 0.8s; }
+        @keyframes cityPulse {
+            0%, 100% { box-shadow: 0 0 0 6px rgba(224,112,128,0.2), 0 0 0 12px rgba(224,112,128,0.08); }
+            50% { box-shadow: 0 0 0 10px rgba(224,112,128,0.3), 0 0 0 20px rgba(224,112,128,0.12); }
+        }
+        .city-label {
+            margin-top: 6px;
+            font-size: 13px; color: #8b6f6f; font-weight: 600;
+            letter-spacing: 1px;
+            background: rgba(255,255,255,0.8);
+            padding: 2px 10px; border-radius: 10px;
+        }
+        .city-detail {
+            font-size: 11px; color: #b8a0a0; margin-top: 1px;
+            background: rgba(255,255,255,0.7);
+            padding: 1px 8px; border-radius: 8px;
+        }
+
+        .route-line {
+            position: absolute;
+            bottom: 31%; left: 18%; right: 20%;
+            height: 3px;
+            background: transparent;
+            border-top: 2px dashed rgba(200,140,140,0.4);
+            z-index: 5;
+            transform: rotate(-3deg);
+            transform-origin: left center;
+        }
+        .traveling-heart {
+            position: absolute;
+            bottom: 28%;
+            z-index: 15;
+            font-size: 18px;
+            animation: travelRoute 6s ease-in-out infinite;
+        }
+        @keyframes travelRoute {
+            0%   { left: 15%; opacity: 0; transform: translateY(0) scale(0.8); }
+            20%  { opacity: 1; }
+            50%  { left: 48%; opacity: 1; transform: translateY(-12px) scale(1.1); }
+            80%  { opacity: 1; }
+            100% { left: 82%; opacity: 0; transform: translateY(0) scale(0.8); }
+        }
+        .map-distance {
+            text-align: center;
+            font-size: 12px;
+            color: #c9a0a0;
+            margin-top: 10px;
+            letter-spacing: 1px;
+        }
+        .map-distance span {
+            display: inline-block;
+            background: rgba(255,255,255,0.6);
+            padding: 4px 14px;
+            border-radius: 12px;
+        }
+
+        /* ========== 分区标题 ========== */
+        .section-title {
+            text-align: center;
+            font-size: 22px;
+            color: #c25a6a;
+            margin: 36px 0 18px;
+            letter-spacing: 2px;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 40px; height: 2px;
+            background: var(--pink-deep);
+            margin: 8px auto 0; border-radius: 1px; opacity: 0.5;
+        }
+
+        /* ========== 电子木鱼 ========== */
+        .wooden-fish-section { text-align: center; margin: 10px 0; }
+        .wooden-fish {
+            display: inline-flex; flex-direction: column;
+            align-items: center; cursor: pointer;
+            transition: transform 0.1s ease; position: relative;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .wooden-fish:active { transform: scale(0.92); }
+        .wooden-fish-body {
+            width: 100px; height: 70px;
+            background: radial-gradient(ellipse at 55% 30%, #d4a574 0%, #b88050 50%, #8b5e3c 100%);
+            border-radius: 50%;
+            box-shadow:
+                0 6px 20px rgba(139,94,60,0.3),
+                inset 0 -4px 8px rgba(0,0,0,0.15),
+                inset 0 4px 8px rgba(255,255,255,0.15);
+            position: relative;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 36px;
+        }
+        .wooden-fish-body::after {
+            content: '';
+            position: absolute;
+            width: 16px; height: 8px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 50%;
+            top: 12px; left: 50%;
+            transform: translateX(-50%);
+        }
+        .wooden-fish-stick {
+            width: 6px; height: 40px;
+            background: linear-gradient(180deg, #c9a070, #8b5e3c);
+            border-radius: 3px; margin-top: -4px;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.15);
+            transition: transform 0.1s ease;
+            transform-origin: top center;
+        }
+        .wooden-fish:active .wooden-fish-stick { transform: rotate(-15deg); }
+        .wooden-fish-label { font-size: 14px; color: #8b6f6f; margin-top: 6px; letter-spacing: 1px; }
+        .merit-counter {
+            font-size: 24px; color: #c25a6a; font-weight: 700; margin-top: 4px;
+            transition: transform 0.2s ease;
+        }
+        .merit-pop {
+            position: absolute; pointer-events: none;
+            font-size: 22px; font-weight: 700; color: #e8a040;
+            animation: meritFloat 1.4s ease-out forwards;
+            z-index: 100; white-space: nowrap;
+        }
+        @keyframes meritFloat {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            60% { opacity: 0.8; transform: translateY(-60px) scale(1.25); }
+            100% { opacity: 0; transform: translateY(-100px) scale(0.8); }
+        }
+
+        /* ========== 运势签 ========== */
+        .fortune-section { text-align: center; margin: 10px 0 20px; }
+        .fortune-card {
+            display: inline-block;
+            background: #fffef9;
+            border-radius: 16px;
+            padding: 24px 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            min-width: 220px;
+            position: relative; overflow: hidden;
+        }
+        .fortune-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 4px;
+            background: linear-gradient(90deg, #f8c8d4, #fde4d0, #f8c8d4);
+        }
+        .fortune-icon {
+            font-size: 40px; margin-bottom: 8px;
+            transition: transform 0.5s ease;
+        }
+        .fortune-icon.spin { animation: fortuneSpin 0.6s ease-out; }
+        @keyframes fortuneSpin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(0.7); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        .fortune-text {
+            font-size: 22px; color: #c25a6a; font-weight: 700;
+            letter-spacing: 2px; min-height: 36px; transition: all 0.3s ease;
+        }
+        .fortune-btn {
+            display: inline-block; margin-top: 12px;
+            padding: 10px 28px; font-size: 16px; letter-spacing: 2px;
+            color: #c25a6a; background: #fef5f0;
+            border: 2px solid #f0d0d8; border-radius: 50px;
+            cursor: pointer; font-family: inherit; transition: all 0.3s;
+        }
+        .fortune-btn:active { background: #fef0f3; transform: scale(0.95); }
+
+        /* ========== 复古信纸 - 折叠展开动画 ========== */
+        .letter-section {
+            margin: 30px 0 20px;
+        }
+        .letter-wrapper {
+            perspective: 1200px;
+            position: relative;
+        }
+
+        /* 信纸容器 - 折叠状态 */
+        .letter-paper {
+            background: #fdfaf3;
+            /* 模拟复古信纸纹理 */
+            background-image:
+                repeating-linear-gradient(transparent, transparent 27px, rgba(200,180,160,0.12) 27px, rgba(200,180,160,0.12) 28px);
+            border: 1px solid #e8dcc8;
+            border-radius: 3px;
+            position: relative;
+            overflow: hidden;
+            /* 折叠状态 */
+            max-height: 100px;
+            transition: max-height 1.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+            box-shadow:
+                0 2px 12px rgba(0,0,0,0.06),
+                inset 0 0 0 12px #fdfaf3,
+                inset 0 0 0 13px #f0e8d4;
+        }
+
+        /* 展开状态 */
+        .letter-paper.unfolded {
+            max-height: 1800px;
+        }
+
+        /* 折叠痕迹 */
+        .letter-crease {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 0;
+            border-top: 1px dashed rgba(200,180,150,0.35);
+            z-index: 5;
+            pointer-events: none;
+        }
+        .letter-crease:nth-child(1) { top: 33%; }
+        .letter-crease:nth-child(2) { top: 66%; }
+
+        /* 折叠状态下的顶部封口装饰 */
+        .letter-seal {
+            position: absolute;
+            top: 8px; right: 14px;
+            width: 28px; height: 28px;
+            background: linear-gradient(135deg, #e8a0b4, #d4788e);
+            border-radius: 50%;
+            z-index: 6;
+            box-shadow: 0 1px 4px rgba(180,100,120,0.3);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            transition: opacity 0.4s ease;
+        }
+        /* 展开后封印淡化 */
+        .letter-paper.unfolded .letter-seal {
+            opacity: 0.25;
+        }
+
+        /* 折叠提示 - 点击展开 */
+        .letter-fold-hint {
+            text-align: center;
+            font-size: 13px;
+            color: #c9a0a0;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            opacity: 1;
+            transition: opacity 0.4s ease;
+        }
+        .letter-fold-hint.hidden {
+            opacity: 0;
+        }
+
+        /* 信纸内部内容 */
+        .letter-content {
+            padding: 32px 24px 28px;
+            opacity: 0;
+            transition: opacity 0.8s ease 0.6s;
+        }
+        .letter-paper.unfolded .letter-content {
+            opacity: 1;
+        }
+
+        .letter-content .typewriter-text {
+            font-size: 17px; line-height: 2.2;
+            color: #5a3e3e; letter-spacing: 0.5px;
+            min-height: 200px;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 2px; height: 18px;
+            background: #c25a6a;
+            margin-left: 2px;
+            animation: blink 0.7s step-end infinite;
+            vertical-align: text-bottom;
+        }
+        .cursor-blink.done { animation: blink 1.5s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* 信纸页脚签名区 */
+        .letter-signature {
+            text-align: right;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px dashed rgba(200,180,150,0.3);
+            font-size: 15px;
+            color: #8b6f6f;
+            letter-spacing: 2px;
+        }
+
+        /* ========== 底部按钮 ========== */
+        .footer-section { text-align: center; margin-top: 36px; padding-bottom: 30px; }
+        .love-btn {
+            display: inline-block;
+            padding: 16px 48px;
+            font-size: 20px; letter-spacing: 3px;
+            color: #fff;
+            background: linear-gradient(135deg, #f0a0b0, #d4788e);
+            border: none; border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 24px rgba(200, 120, 140, 0.35);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        .love-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200,120,140,0.45); }
+        .love-btn:active { transform: scale(0.96); }
+        .love-reveal {
+            margin-top: 24px;
+            font-size: 48px; font-weight: 700;
+            color: #c25a6a; letter-spacing: 4px;
+            opacity: 0; transform: scale(0.5);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .love-reveal.show { opacity: 1; transform: scale(1); }
+        .heart-particle {
+            position: fixed; pointer-events: none; z-index: 1500;
+            font-size: 24px;
+            animation: heartBurst 1.5s ease-out forwards;
+        }
+        @keyframes heartBurst {
+            0% { opacity: 1; transform: translate(0, 0) scale(1); }
+            100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.2); }
+        }
+
+        /* ========== 彩蛋区域 ========== */
+        .footer-easter-area {
+            margin-top: 20px;
+            position: relative;
+            display: inline-block;
+        }
+        .footer-note {
+            font-size: 13px;
+            color: #c9a0a0;
+            letter-spacing: 1px;
+            cursor: default;
+            position: relative;
+            display: inline;
+        }
+        /* 彩蛋闪烁提示 */
+        .easter-hint-star {
+            display: inline-block;
+            font-size: 11px;
+            margin-left: 6px;
+            animation: starTwinkle 1.5s ease-in-out infinite;
+            vertical-align: middle;
+            cursor: default;
+        }
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 0.25; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+        .easter-hint-text {
+            display: block;
+            font-size: 10px;
+            color: #d4b8b8;
+            letter-spacing: 1px;
+            margin-top: 2px;
+            animation: hintFade 3s ease-in-out infinite;
+        }
+        @keyframes hintFade {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+        .easter-egg-popup {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: #fffef9;
+            border-radius: 20px;
+            padding: 30px 24px;
+            text-align: center;
+            z-index: 3000;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.2);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 280px;
+            width: 80%;
+        }
+        .easter-egg-popup.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .easter-egg-popup .emoji-big {
+            font-size: 72px;
+            display: block;
+            animation: wiggle 0.5s ease-in-out infinite;
+        }
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+        .easter-egg-popup .punchline {
+            font-size: 24px;
+            color: #c25a6a;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-top: 12px;
+        }
+        .easter-egg-popup .close-hint {
+            font-size: 13px;
+            color: #c9a0a0;
+            margin-top: 14px;
+        }
+        .overlay-mask {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 2500;
+            opacity: 0; visibility: hidden;
+            transition: all 0.3s;
+        }
+        .overlay-mask.show { opacity: 1; visibility: visible; }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 360px) {
+            .hero h1 { font-size: 26px; }
+            .hero .subtitle { font-size: 15px; }
+            .letter-content .typewriter-text { font-size: 15px; }
+            .love-btn { font-size: 17px; padding: 14px 36px; }
+            .welcome-box h2 { font-size: 20px; }
+            .wooden-fish-body { width: 80px; height: 56px; font-size: 28px; }
+            .letter-paper { max-height: 80px; }
+        }
+    </style>
 </head>
 <body>
-    demo
+
+    <!-- 芯片角落装饰 SVG -->
+    <!-- 左上角 -->
+    <svg class="chip-corner chip-corner-tl" viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg">
+        <!-- 芯片主体 -->
+        <rect x="2" y="2" width="28" height="28" rx="2" class="chip-square"/>
+        <!-- 左侧引脚 -->
+        <rect x="0" y="8" width="4" height="3" rx="0.5" class="chip-pin"/>
+        <rect x="0" y="14" width="4" height="3" rx="0.5" class="chip-pin"/>
+        <rect x="0" y="20" width="4" height="3" rx="0.5" class="chip-pin"/>
+        <!-- 上侧引脚 -->
+        <rect x="8" y="0" width="3" height="4" rx="0.5" class="chip-pin"/>
+        <rect x="14" y="0" width="3" height="4" rx="0.5" class="chip-pin"/>
+        <rect x="20" y="0" width="3" height="4" rx="0.5" class="chip-pin"/>
+        <!-- 走线 -->
+        <polyline points="4,10 12,10 12,32 20,32" class="chip-trace"/>
+        <polyline points="4,16 10,16 10,36 25,36 25,44" class="chip-trace"/>
+        <polyline points="10,4 10,8" class="chip-trace"/>
+        <polyline points="20,32 20,50 35,50 35,60" class="chip-trace"/>
+        <polyline points="25,44 25,52 40,52 40,62" class="chip-trace"/>
+        <polyline points="16,4 16,8" class="chip-trace"/>
+        <!-- 过孔 -->
+        <circle cx="12" cy="32" r="2" class="chip-via"/>
+        <circle cx="10" cy="36" r="2" class="chip-via"/>
+        <circle cx="20" cy="50" r="2" class="chip-via"/>
+        <circle cx="25" cy="52" r="2" class="chip-via"/>
+        <circle cx="35" cy="60" r="2" class="chip-via"/>
+        <circle cx="40" cy="62" r="2" class="chip-via"/>
+        <circle cx="10" cy="8" r="1.5" class="chip-via"/>
+        <circle cx="16" cy="8" r="1.5" class="chip-via"/>
+    </svg>
+    <!-- 右下角 -->
+    <svg class="chip-corner chip-corner-br" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="4" width="32" height="32" rx="2" class="chip-square"/>
+        <!-- 引脚 -->
+        <rect x="10" y="0" width="3" height="4" rx="0.5" class="chip-pin"/>
+        <rect x="18" y="0" width="3" height="4" rx="0.5" class="chip-pin"/>
+        <rect x="26" y="0" width="3" height="4" rx="0.5" class="chip-pin"/>
+        <rect x="0" y="10" width="4" height="3" rx="0.5" class="chip-pin"/>
+        <rect x="0" y="18" width="4" height="3" rx="0.5" class="chip-pin"/>
+        <rect x="0" y="26" width="4" height="3" rx="0.5" class="chip-pin"/>
+        <!-- 走线 -->
+        <polyline points="12,4 12,10" class="chip-trace"/>
+        <polyline points="20,4 20,14 36,14 36,30 52,30 52,48" class="chip-trace"/>
+        <polyline points="4,14 8,14 8,36" class="chip-trace"/>
+        <polyline points="28,4 28,10 36,10" class="chip-trace"/>
+        <polyline points="4,22 6,22 6,44 28,44 28,60 44,60 44,72" class="chip-trace"/>
+        <polyline points="36,30 36,50 58,50 58,68" class="chip-trace"/>
+        <!-- 过孔 -->
+        <circle cx="12" cy="10" r="2" class="chip-via"/>
+        <circle cx="36" cy="14" r="2" class="chip-via"/>
+        <circle cx="8" cy="36" r="2" class="chip-via"/>
+        <circle cx="6" cy="44" r="2" class="chip-via"/>
+        <circle cx="28" cy="60" r="2" class="chip-via"/>
+        <circle cx="36" cy="50" r="2" class="chip-via"/>
+        <circle cx="52" cy="48" r="2" class="chip-via"/>
+        <circle cx="58" cy="68" r="2" class="chip-via"/>
+        <circle cx="44" cy="72" r="2" class="chip-via"/>
+    </svg>
+
+    <!-- 电路节点装饰（散布在页面中的小过孔点） -->
+    <div class="circuit-node" style="top:6%;left:12%;"></div>
+    <div class="circuit-node" style="top:10%;right:14%;"></div>
+    <div class="circuit-node" style="top:22%;left:6%;"></div>
+    <div class="circuit-node" style="top:38%;right:8%;"></div>
+    <div class="circuit-node" style="top:48%;left:5%;"></div>
+    <div class="circuit-node" style="top:55%;right:10%;"></div>
+    <div class="circuit-node" style="top:65%;left:8%;"></div>
+    <div class="circuit-node" style="top:72%;right:5%;"></div>
+    <div class="circuit-node" style="top:82%;left:10%;"></div>
+    <div class="circuit-node" style="top:88%;right:12%;"></div>
+    <div class="circuit-node" style="top:93%;left:7%;"></div>
+
+    <!-- 飘落花瓣容器 -->
+    <div class="petals-container" id="petalsContainer"></div>
+
+    <!-- 背景装饰圆 -->
+    <div class="bg-decoration bg-circle-1"></div>
+    <div class="bg-decoration bg-circle-2"></div>
+    <div class="bg-decoration bg-circle-3"></div>
+
+    <!-- 彩蛋遮罩 -->
+    <div class="overlay-mask" id="overlayMask"></div>
+    <!-- 彩蛋弹窗 -->
+    <div class="easter-egg-popup" id="easterEggPopup">
+        <span class="emoji-big">🤪</span>
+        <p class="punchline">爱你老妈！💖</p>
+        <p class="close-hint">点击空白处关闭</p>
+    </div>
+
+    <!-- ==================== 欢迎遮罩层 ==================== -->
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <div class="welcome-box">
+            <div class="welcome-emoji">💐</div>
+            <h2>母亲节快乐</h2>
+            <p class="hint">一份小小的礼物，送给最爱的妈妈</p>
+            <input
+                type="text"
+                class="welcome-input"
+                id="momNameInput"
+                placeholder="请输入您的名字"
+                maxlength="10"
+                autocomplete="off"
+            >
+            <p class="error-hint" id="errorHint">名字输入不正确，请重新输入</p>
+            <button class="welcome-btn" id="openGiftBtn">🎁 开启礼物</button>
+        </div>
+    </div>
+
+    <!-- ==================== 主体内容 ==================== -->
+    <div class="main-container">
+
+        <!-- 动态欢迎文字 -->
+        <div class="dynamic-welcome" id="dynamicWelcome"></div>
+
+        <!-- 头部 -->
+        <header class="hero" style="
+            text-align:center; padding:40px 20px 36px;
+            background:linear-gradient(180deg,#fef0f3 0%,#fde4d0 50%,#fff8f5 100%);
+            border-radius:0 0 50% 50%/0 0 30px 30px;
+            margin:0 -20px 16px;
+            box-shadow:0 4px 30px rgba(200,150,150,0.12);
+            position:relative;
+        ">
+            <!-- 芯片装饰（右上角） -->
+            <div style="position:absolute;top:14px;right:14px;" class="chip-badge">
+                <svg width="13" height="13" viewBox="0 0 20 20" style="display:inline-block;vertical-align:middle;">
+                    <rect x="3" y="3" width="14" height="14" rx="2" fill="none" stroke="#b87860" stroke-width="1.5" opacity="0.8"/>
+                    <rect x="0" y="6" width="3" height="2" rx="0.5" fill="#b87860" opacity="0.7"/>
+                    <rect x="0" y="11" width="3" height="2" rx="0.5" fill="#b87860" opacity="0.7"/>
+                    <rect x="17" y="6" width="3" height="2" rx="0.5" fill="#b87860" opacity="0.7"/>
+                    <rect x="17" y="11" width="3" height="2" rx="0.5" fill="#b87860" opacity="0.7"/>
+                    <rect x="7" y="0" width="2" height="3" rx="0.5" fill="#b87860" opacity="0.7"/>
+                    <rect x="12" y="0" width="2" height="3" rx="0.5" fill="#b87860" opacity="0.7"/>
+                    <rect x="7" y="17" width="2" height="3" rx="0.5" fill="#b87860" opacity="0.7"/>
+                    <rect x="12" y="17" width="2" height="3" rx="0.5" fill="#b87860" opacity="0.7"/>
+                </svg>
+                科技·温情
+            </div>
+            <div class="hero-icon" style="font-size:56px;margin-bottom:12px;">🌸</div>
+            <h1 style="font-size:32px;font-weight:700;color:#c25a6a;letter-spacing:2px;">
+                妈妈，母亲节快乐
+                <span class="chip-badge" style="vertical-align:middle;margin-left:8px;">
+                    <svg width="13" height="13" viewBox="0 0 20 20" style="display:inline-block;vertical-align:middle;">
+                        <rect x="3" y="3" width="14" height="14" rx="2" fill="none" stroke="#b87860" stroke-width="1.5" opacity="0.8"/>
+                        <rect x="0" y="6" width="3" height="2" rx="0.5" fill="#b87860" opacity="0.7"/>
+                        <rect x="0" y="11" width="3" height="2" rx="0.5" fill="#b87860" opacity="0.7"/>
+                        <rect x="17" y="6" width="3" height="2" rx="0.5" fill="#b87860" opacity="0.7"/>
+                        <rect x="17" y="11" width="3" height="2" rx="0.5" fill="#b87860" opacity="0.7"/>
+                    </svg>
+                    志浩
+                </span>
+            </h1>
+            <div style="display:inline-block;width:50px;height:3px;background:#e8a0b4;border-radius:2px;margin:12px 0 6px;opacity:0.6;"></div>
+            <p class="subtitle" style="font-size:18px;color:#8b6f6f;letter-spacing:1px;">虽然身处不同区域，但心在一起</p>
+        </header>
+
+        <!-- ========== 鸟瞰图区域 ========== -->
+        <div class="map-section">
+            <p class="map-title">🗺️ 我们之间的连接</p>
+            <div class="map-canvas-wrap">
+                <div class="map-grid"></div>
+                <div class="map-terrain t1"></div>
+                <div class="map-terrain t2"></div>
+                <div class="map-terrain t3"></div>
+                <div class="map-terrain t4"></div>
+                <div class="map-river" style="width:35%;top:30%;left:10%;transform:rotate(12deg);"></div>
+                <div class="map-river" style="width:25%;top:50%;right:12%;transform:rotate(-8deg);"></div>
+                <div class="route-line"></div>
+                <div class="traveling-heart">💕</div>
+                <!-- 江门蓬江区 -->
+                <div class="city-marker jiangmen">
+                    <div class="city-dot"></div>
+                    <div class="city-label">江门</div>
+                    <div class="city-detail">蓬江区</div>
+                </div>
+                <!-- 深圳龙岗区 -->
+                <div class="city-marker shenzhen">
+                    <div class="city-dot"></div>
+                    <div class="city-label">深圳</div>
+                    <div class="city-detail">龙岗区</div>
+                </div>
+            </div>
+            <p class="map-distance"><span>🚗 几站路的距离 · 💕 心与心的距离：零</span></p>
+        </div>
+
+        <!-- ========== 小互动区域（两列布局） ========== -->
+        <div style="position:relative;display:flex; gap:16px; margin:10px 0;">
+
+            <!-- 中间电路连线装饰 -->
+            <div style="position:absolute;left:50%;top:15%;bottom:15%;width:20px;transform:translateX(-50%);pointer-events:none;z-index:5;opacity:0.35;">
+                <svg viewBox="0 0 20 200" style="width:100%;height:100%;" xmlns="http://www.w3.org/2000/svg">
+                    <!-- 垂直主线 -->
+                    <line x1="10" y1="0" x2="10" y2="200" stroke="#c09070" stroke-width="1.2" stroke-dasharray="6,4" opacity="0.5"/>
+                    <!-- 分支走线 -->
+                    <polyline points="10,25 18,25 18,40 10,40" fill="none" stroke="#c09878" stroke-width="0.8"/>
+                    <polyline points="10,80 2,80 2,95 10,95" fill="none" stroke="#c09878" stroke-width="0.8"/>
+                    <polyline points="10,130 18,130 18,145 10,145" fill="none" stroke="#c09878" stroke-width="0.8"/>
+                    <polyline points="10,175 2,175 2,190 10,190" fill="none" stroke="#c09878" stroke-width="0.8"/>
+                    <!-- 过孔 -->
+                    <circle cx="10" cy="25" r="2" fill="#b87860" opacity="0.6"/>
+                    <circle cx="10" cy="40" r="2" fill="#b87860" opacity="0.6"/>
+                    <circle cx="10" cy="80" r="2" fill="#b87860" opacity="0.6"/>
+                    <circle cx="10" cy="95" r="2" fill="#b87860" opacity="0.6"/>
+                    <circle cx="10" cy="130" r="2" fill="#b87860" opacity="0.6"/>
+                    <circle cx="10" cy="145" r="2" fill="#b87860" opacity="0.6"/>
+                    <circle cx="10" cy="175" r="2" fill="#b87860" opacity="0.6"/>
+                    <circle cx="10" cy="190" r="2" fill="#b87860" opacity="0.6"/>
+                </svg>
+            </div>
+            <!-- 电子木鱼 -->
+            <div style="flex:1;">
+                <h2 class="section-title" style="font-size:18px;margin-top:0;">🪷 电子木鱼</h2>
+                <div class="wooden-fish-section">
+                    <div class="wooden-fish" id="woodenFish">
+                        <div class="wooden-fish-body">🐟</div>
+                        <div class="wooden-fish-stick"></div>
+                    </div>
+                    <p class="wooden-fish-label">点我敲木鱼 🙏</p>
+                    <div class="merit-counter" id="meritCounter">功德：0</div>
+                </div>
+            </div>
+
+            <!-- 今日运势签 -->
+            <div style="flex:1;">
+                <h2 class="section-title" style="font-size:18px;margin-top:0;">🔮 今日运势</h2>
+                <div class="fortune-section">
+                    <div class="fortune-card">
+                        <div class="fortune-icon" id="fortuneIcon">✨</div>
+                        <div class="fortune-text" id="fortuneText">点击下方按钮</div>
+                    </div>
+                    <button class="fortune-btn" id="fortuneBtn">🎋 抽一张签</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 复古信纸（折叠展开） ========== -->
+        <h2 class="section-title">💌 给妈妈的信</h2>
+        <div class="letter-section" id="letterSection">
+            <p class="letter-fold-hint" id="letterFoldHint">👇 轻触信纸，展开阅读</p>
+            <div class="letter-wrapper">
+                <div class="letter-paper" id="letterPaper">
+                    <div class="letter-crease"></div>
+                    <div class="letter-crease"></div>
+                    <div class="letter-seal">💌</div>
+                    <div class="letter-content">
+                        <p class="typewriter-text" id="typewriter"></p>
+                        <div class="letter-signature">
+                            <p>—— 永远爱你的志浩</p>
+                            <p style="font-size:12px;color:#c9a0a0;margin-top:4px;">2026年5月 · 母亲节</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 底部 ========== -->
+        <div class="footer-section">
+            <button class="love-btn" id="loveBtn">✨ 点 一 下 ✨</button>
+            <div class="love-reveal" id="loveReveal">爱你老妈！❤️</div>
+            <div class="footer-easter-area">
+                <p class="footer-note" id="easterEggTrigger">— 永远爱你的志浩 —</p>
+                <span class="easter-hint-star" title="连续点我5次！">✨</span>
+                <span class="easter-hint-text">这里有秘密...</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+    (function() {
+        // ========== 飘落花瓣 ==========
+        const petalsContainer = document.getElementById('petalsContainer');
+        const PETAL_COUNT = 25;
+
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            const size = Math.random() * 14 + 10;
+            petal.style.width = size + 'px';
+            petal.style.height = size * 1.4 + 'px';
+            petal.style.left = Math.random() * 100 + '%';
+            petal.style.animationDuration = Math.random() * 8 + 8 + 's';
+            petal.style.animationDelay = Math.random() * 10 + 's';
+            petal.style.opacity = Math.random() * 0.5 + 0.35;
+            return petal;
+        }
+
+        for (let i = 0; i < PETAL_COUNT; i++) {
+            petalsContainer.appendChild(createPetal());
+        }
+        setInterval(() => {
+            if (petalsContainer.querySelectorAll('.petal').length < PETAL_COUNT) {
+                petalsContainer.appendChild(createPetal());
+            }
+        }, 3000);
+
+        // ========== 欢迎遮罩层 + 姓名验证 ==========
+        const welcomeOverlay = document.getElementById('welcomeOverlay');
+        const momNameInput = document.getElementById('momNameInput');
+        const openGiftBtn = document.getElementById('openGiftBtn');
+        const dynamicWelcome = document.getElementById('dynamicWelcome');
+        const errorHint = document.getElementById('errorHint');
+
+        function tryOpenGift() {
+            const rawName = momNameInput.value.trim();
+
+            // 验证：只有"赵盼喜"可以进入
+            if (rawName !== '赵盼喜') {
+                // 错误动画
+                momNameInput.classList.add('error');
+                errorHint.classList.add('show');
+                setTimeout(() => {
+                    momNameInput.classList.remove('error');
+                }, 500);
+                // 清空输入框
+                momNameInput.value = '';
+                momNameInput.focus();
+                return;
+            }
+
+            // 验证通过
+            errorHint.classList.remove('show');
+            welcomeOverlay.classList.add('hidden');
+
+            // 自动播放背景音乐
+            startMusic();
+
+            // 显示动态欢迎
+            dynamicWelcome.textContent = '欢迎 赵盼喜 女士光临！🌸';
+            setTimeout(() => {
+                dynamicWelcome.classList.add('show');
+            }, 400);
+
+            // 启动信纸检测
+            setTimeout(setupLetterObserver, 600);
+        }
+
+        openGiftBtn.addEventListener('click', tryOpenGift);
+
+        // 回车键触发
+        momNameInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                tryOpenGift();
+            }
+        });
+
+        // ========== 信纸折叠展开动画 (Intersection Observer) ==========
+        const letterPaper = document.getElementById('letterPaper');
+        const letterFoldHint = document.getElementById('letterFoldHint');
+        const letterSection = document.getElementById('letterSection');
+        let letterUnfolded = false;
+        let typewriterStarted = false;
+
+        // 信件文本内容
+        const letterText =
+            '亲爱的妈妈：\n\n' +
+            '老妈，看到这封信的时候，就想跟你说声：谢谢你，真的辛苦了！\n\n' +
+            '时光就像白驹过隙，大一转眼就要结束了。记得刚上大学那会，还觉得新鲜，现在一晃都快一年了。今年母亲节不能回深圳陪你，但我想着，正好用学校里学的技术，给你做个特别的礼物。\n\n' +
+            '这些年你和爸爸为了我忙里忙外，很不容易。之前你总是为我操心，晚上等我回家，早上给我做热乎的早饭，有时候还唠叨我，但我知道你都是为了我好。这些我都记在心里。\n\n' +
+            '老妈，母亲节快乐！希望你以后每天都能开开心心的，身体棒棒的，别总为我担心。现在我已经长大了，少操心，更长寿！\n\n' +
+            '祝老妈节日快乐，万事顺遂，心想事成，平平安安！';
+
+        function unfoldLetter() {
+            if (letterUnfolded) return;
+            letterUnfolded = true;
+            letterPaper.classList.add('unfolded');
+            letterFoldHint.classList.add('hidden');
+
+            // 展开动画完成后启动打字机
+            setTimeout(() => {
+                if (!typewriterStarted) {
+                    startTypewriter();
+                }
+            }, 900);
+        }
+
+        // 点击信纸展开
+        letterPaper.addEventListener('click', function(e) {
+            unfoldLetter();
+        });
+
+        // 点击提示文字也可以展开
+        letterFoldHint.addEventListener('click', function(e) {
+            unfoldLetter();
+        });
+
+        // Intersection Observer - 滚动到信纸区域时自动展开
+        function setupLetterObserver() {
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting && !letterUnfolded) {
+                        // 延迟一小段，让用户看到折叠状态
+                        setTimeout(unfoldLetter, 400);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.3,
+                rootMargin: '0px 0px -30px 0px'
+            });
+
+            observer.observe(letterSection);
+        }
+
+        // ========== 打字机效果 ==========
+        const typewriterEl = document.getElementById('typewriter');
+        const cursorEl = document.createElement('span');
+        cursorEl.className = 'cursor-blink';
+        // 光标放到 signature 区域前面
+        const letterContent = document.querySelector('.letter-content');
+
+        let charIndex = 0;
+
+        function startTypewriter() {
+            if (typewriterStarted) return;
+            typewriterStarted = true;
+            // 在文本区末尾插入光标
+            typewriterEl.appendChild(cursorEl);
+            typeNextChar();
+        }
+
+        function typeNextChar() {
+            if (charIndex < letterText.length) {
+                const char = letterText[charIndex];
+                if (char === '\n') {
+                    typewriterEl.appendChild(document.createElement('br'));
+                } else {
+                    typewriterEl.appendChild(document.createTextNode(char));
+                }
+                // 移动光标到文本末尾
+                typewriterEl.appendChild(cursorEl);
+                charIndex++;
+                const delay = Math.random() * 40 + 35;
+                setTimeout(typeNextChar, delay);
+            } else {
+                cursorEl.classList.add('done');
+            }
+        }
+
+        // ========== 电子木鱼 ==========
+        const woodenFish = document.getElementById('woodenFish');
+        const meritCounter = document.getElementById('meritCounter');
+        let meritTotal = 0;
+
+        let audioCtx = null;
+        function playKnockSound() {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                const t = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(180, t);
+                osc.frequency.exponentialRampToValueAtTime(90, t + 0.12);
+                gain.gain.setValueAtTime(0.35, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(t);
+                osc.stop(t + 0.15);
+            } catch (e) { /* 静默 */ }
+        }
+
+        woodenFish.addEventListener('click', function(e) {
+            meritTotal++;
+            meritCounter.textContent = '功德：' + meritTotal;
+            meritCounter.style.transform = 'scale(1.35)';
+            setTimeout(() => { meritCounter.style.transform = 'scale(1)'; }, 200);
+            playKnockSound();
+            spawnMeritPopup(e);
+        });
+
+        function spawnMeritPopup(e) {
+            const popup = document.createElement('span');
+            popup.className = 'merit-pop';
+            popup.textContent = '功德 +1';
+            const rect = woodenFish.getBoundingClientRect();
+            popup.style.left = (rect.left + rect.width / 2 - 35) + 'px';
+            popup.style.top = (rect.top - 5) + 'px';
+            document.body.appendChild(popup);
+            popup.addEventListener('animationend', function() { popup.remove(); });
+        }
+
+        // ========== 今日运势签 ==========
+        const fortuneBtn = document.getElementById('fortuneBtn');
+        const fortuneText = document.getElementById('fortuneText');
+        const fortuneIcon = document.getElementById('fortuneIcon');
+
+        const fortunes = [
+            { icon: '😊', text: '今日宜：开心' },
+            { icon: '💰', text: '今日宜：发财' },
+            { icon: '🧘', text: '今日宜：放松' },
+            { icon: '🍵', text: '今日宜：喝茶' },
+            { icon: '📞', text: '今日宜：视频通话' },
+            { icon: '🌸', text: '今日宜：赏花' },
+            { icon: '🎵', text: '今日宜：听音乐' },
+            { icon: '🍰', text: '今日宜：吃甜点' },
+            { icon: '💤', text: '今日宜：睡个懒觉' },
+            { icon: '📖', text: '今日宜：读本好书' },
+            { icon: '🛍️', text: '今日宜：逛逛街' },
+            { icon: '💕', text: '今日宜：被宠爱' },
+        ];
+
+        fortuneBtn.addEventListener('click', function() {
+            fortuneIcon.classList.remove('spin');
+            void fortuneIcon.offsetWidth;
+            fortuneIcon.classList.add('spin');
+            const pick = fortunes[Math.floor(Math.random() * fortunes.length)];
+            setTimeout(() => {
+                fortuneIcon.textContent = pick.icon;
+                fortuneText.textContent = pick.text;
+            }, 300);
+        });
+
+        // ========== 背景音乐 - 轻音乐生成器 ==========
+        // 使用 Web Audio API 合成一段舒缓的 pentatonic 摇篮曲
+        var bgmCtx = null;
+        var bgmGain = null;
+        var bgmTimeout = null;
+
+        function startMusic() {
+            if (bgmCtx) return; // 已经启动
+            try {
+                bgmCtx = new (window.AudioContext || window.webkitAudioContext)();
+                bgmGain = bgmCtx.createGain();
+                bgmGain.gain.value = 0.28; // 轻柔音量
+                bgmGain.connect(bgmCtx.destination);
+
+                // pentatonic 音阶 (C4 → C5): 令人放松的五声音阶
+                var scale = [261.6, 293.7, 329.6, 392.0, 440.0, 523.3];
+                // 旋律序列 — 缓慢、抒情的乐句
+                var melody = [
+                    0, 2, 3, 2, 0, -1, -1, 0, 2, 3,
+                    5, 3, 2, 0, 2, 3, 1, 0, -1, -1,
+                    0, 2, 3, 5, 3, 2, 3, 1, 0, -1,
+                    2, 3, 2, 0, 2, 0, -1, -1, -1, -1
+                ];
+                var baseOctave = 1; // 从 scale[1] ≈ D4 附近起
+                var noteDuration = 0.85; // 每音秒数 → 约 70 BPM
+
+                // 低频底音垫 — 温暖氛围
+                function drone(noteIndex, startTime, dur) {
+                    var o = bgmCtx.createOscillator();
+                    var g = bgmCtx.createGain();
+                    o.type = 'sine';
+                    o.frequency.value = scale[noteIndex] * 0.5; // 低八度
+                    g.gain.setValueAtTime(0, startTime);
+                    g.gain.linearRampToValueAtTime(0.12, startTime + 0.6);
+                    g.gain.linearRampToValueAtTime(0, startTime + dur);
+                    o.connect(g);
+                    g.connect(bgmGain);
+                    o.start(startTime);
+                    o.stop(startTime + dur);
+                }
+
+                function note(index, startTime, dur, vel) {
+                    if (index < 0) return; // 休止符
+                    var freq = scale[index % scale.length];
+                    var octShift = Math.floor(index / scale.length);
+                    freq *= Math.pow(2, octShift);
+
+                    // 主音 — 三角波模拟柔和音色
+                    var o = bgmCtx.createOscillator();
+                    var g = bgmCtx.createGain();
+                    o.type = 'triangle';
+                    o.frequency.value = freq;
+                    var vol = 0.18 * (vel || 1);
+                    g.gain.setValueAtTime(0, startTime);
+                    g.gain.linearRampToValueAtTime(vol, startTime + 0.08);
+                    g.gain.linearRampToValueAtTime(vol * 0.55, startTime + dur * 0.75);
+                    g.gain.linearRampToValueAtTime(0, startTime + dur);
+                    o.connect(g);
+                    g.connect(bgmGain);
+                    o.start(startTime);
+                    o.stop(startTime + dur + 0.1);
+
+                    // 泛音层 — 高八度泛音，增加空灵感
+                    var o2 = bgmCtx.createOscillator();
+                    var g2 = bgmCtx.createGain();
+                    o2.type = 'sine';
+                    o2.frequency.value = freq * 2;
+                    g2.gain.setValueAtTime(0, startTime);
+                    g2.gain.linearRampToValueAtTime(vol * 0.25, startTime + 0.12);
+                    g2.gain.linearRampToValueAtTime(0, startTime + dur * 0.8);
+                    o2.connect(g2);
+                    g2.connect(bgmGain);
+                    o2.start(startTime);
+                    o2.stop(startTime + dur + 0.1);
+                }
+
+                var totalNotes = melody.length;
+                var loopDuration = totalNotes * noteDuration;
+
+                function playLoop(startOffset) {
+                    var now = bgmCtx.currentTime;
+                    for (var i = 0; i < totalNotes; i++) {
+                        var t = now + i * noteDuration;
+                        var idx = melody[i];
+                        note(idx + baseOctave, t, noteDuration * 1.05, 1);
+                        // 每隔一音加底音
+                        if (i % 8 === 0) {
+                            var rootIdx = idx >= 0 ? idx % 5 : 0;
+                            drone(rootIdx, t, noteDuration * 8);
+                        }
+                    }
+                    // 提前一点点调度下一轮，实现无缝循环
+                    bgmTimeout = setTimeout(function() {
+                        playLoop(0);
+                    }, (loopDuration * 1000) - 100);
+                }
+
+                playLoop(0);
+            } catch (e) {
+                // 静默处理
+                bgmCtx = null;
+            }
+        }
+
+        // ========== 底部按钮 ==========
+        const loveBtn = document.getElementById('loveBtn');
+        const loveReveal = document.getElementById('loveReveal');
+
+        loveBtn.addEventListener('click', function() {
+            if (loveReveal.classList.contains('show')) {
+                loveReveal.classList.remove('show');
+                setTimeout(() => { loveReveal.classList.add('show'); }, 100);
+            } else {
+                loveReveal.classList.add('show');
+            }
+            spawnHearts();
+        });
+
+        function spawnHearts() {
+            const btnRect = loveBtn.getBoundingClientRect();
+            const cx = btnRect.left + btnRect.width / 2;
+            const cy = btnRect.top + btnRect.height / 2;
+            const emojis = ['❤️', '💕', '💖', '💗', '💝', '✨', '🌸'];
+            for (let i = 0; i < 14; i++) {
+                const particle = document.createElement('span');
+                particle.className = 'heart-particle';
+                particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                particle.style.left = cx + 'px';
+                particle.style.top = cy + 'px';
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 160 + 60;
+                particle.style.setProperty('--dx', Math.cos(angle) * distance + 'px');
+                particle.style.setProperty('--dy', Math.sin(angle) * distance - 80 + 'px');
+                particle.style.animationDuration = Math.random() * 1 + 1 + 's';
+                document.body.appendChild(particle);
+                particle.addEventListener('animationend', function() { particle.remove(); });
+            }
+        }
+
+        // ========== 彩蛋：连续点击5次（带视觉提示） ==========
+        const easterEggTrigger = document.getElementById('easterEggTrigger');
+        const easterHintStar = document.querySelector('.easter-hint-star');
+        const easterHintText = document.querySelector('.easter-hint-text');
+        const easterEggPopup = document.getElementById('easterEggPopup');
+        const overlayMask = document.getElementById('overlayMask');
+        let clickCount = 0;
+        let clickTimer = null;
+
+        // 点击触发区域包含文字和闪烁星星
+        function handleEasterClick() {
+            clickCount++;
+            clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => { clickCount = 0; }, 1500);
+
+            if (clickCount >= 5) {
+                clickCount = 0;
+                clearTimeout(clickTimer);
+                easterEggPopup.classList.add('show');
+                overlayMask.classList.add('show');
+            }
+        }
+
+        easterEggTrigger.addEventListener('click', handleEasterClick);
+        easterHintStar.addEventListener('click', handleEasterClick);
+        if (easterHintText) {
+            easterHintText.addEventListener('click', handleEasterClick);
+        }
+
+        // 点击空白处关闭
+        overlayMask.addEventListener('click', hideEasterEgg);
+        easterEggPopup.addEventListener('click', function(e) {
+            e.stopPropagation();
+            hideEasterEgg();
+        });
+
+        function hideEasterEgg() {
+            easterEggPopup.classList.remove('show');
+            overlayMask.classList.remove('show');
+        }
+
+    })();
+    </script>
+    <audio id="bgMusic" loop preload="auto" style="display:none;"></audio>
 </body>
 </html>
