@@ -1105,6 +1105,36 @@ const MC_DATA = {
     }
   ],
 
+  /** 待建清单模板 */
+  templates: {
+    redstone: {
+      name: "⚙️ 1.21.4 生电发展路线",
+      description: "从零开始的标准生电流程，按顺序逐步解锁",
+      items: [
+        { name: "刷石机 — 获取基础建筑材料", category: "machine", icon: "🪨", difficulty: "easy" },
+        { name: "刷铁机 — 铁锭自动化", category: "machine", icon: "🦾", difficulty: "medium" },
+        { name: "刷怪塔 — 经验+掉落物(后期改火药塔)", category: "machine", icon: "💀", difficulty: "medium" },
+        { name: "小黑塔 — 末地经验+末影珍珠", category: "machine", icon: "👾", difficulty: "medium" },
+        { name: "凋零骷髅机 — 获取凋零头颅", category: "machine", icon: "☠️", difficulty: "hard" },
+        { name: "杀凋机 — 自动化获取下界之星", category: "machine", icon: "⭐", difficulty: "hard" },
+        { name: "珍珠炮 — 后期超远程传送网络", category: "machine", icon: "🔮", difficulty: "hard" }
+      ]
+    },
+    building: {
+      name: "🏛️ 建筑标准流程",
+      description: "从选址到完工的完整建筑工序",
+      items: [
+        { name: "选址与地形平整", category: "building", icon: "🗺️", difficulty: "easy" },
+        { name: "地基铺设与规划放线", category: "building", icon: "📐", difficulty: "easy" },
+        { name: "主体框架与柱子搭建", category: "building", icon: "🏗️", difficulty: "medium" },
+        { name: "墙体砌筑与门窗开洞", category: "building", icon: "🧱", difficulty: "medium" },
+        { name: "屋顶建造与防水处理", category: "building", icon: "🏠", difficulty: "medium" },
+        { name: "内饰装修与灯光布置", category: "building", icon: "💡", difficulty: "hard" },
+        { name: "周围环境绿化与道路", category: "building", icon: "🌳", difficulty: "hard" }
+      ]
+    }
+  },
+
   /** 根据ID查找资源 */
   findResourceById: function(id) {
     return this.resources.find(r => r.id === id);

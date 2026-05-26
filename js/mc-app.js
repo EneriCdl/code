@@ -260,30 +260,31 @@
   $('#nav-search').addEventListener('click', function() { navigateTo('search'); });
   $('#nav-todolist').addEventListener('click', function() { navigateTo('todolist'); });
 
-  /* ========== 首页英雄区搜索按钮 ========== */
-  var heroSearchBtn = $('#btn-hero-search');
-  if (heroSearchBtn) {
-    heroSearchBtn.addEventListener('click', function() { navigateTo('search'); });
-  }
+  /* ========== 事件委托：动态元素点击 ========== */
+  document.addEventListener('click', function(e) {
+    var target = e.target.closest ? e.target.closest('[data-action]') : null;
+    if (!target) return;
+    var action = target.getAttribute('data-action');
 
-  /* ========== 快捷导航 Hero 按钮 ========== */
-  var heroNavTutorials = $('#hero-nav-tutorials');
-  var heroNavResources = $('#hero-nav-resources');
-  if (heroNavTutorials) {
-    heroNavTutorials.addEventListener('click', function() {
-      try { window.playSfx.click(); } catch(e) {}
-      // 先确保在首页
-      if (currentSubView !== 'home') navigateTo('home');
-      setTimeout(function() { window.smoothScrollTo('#section-tutorials', 20); }, 150);
-    });
-  }
-  if (heroNavResources) {
-    heroNavResources.addEventListener('click', function() {
-      try { window.playSfx.click(); } catch(e) {}
-      if (currentSubView !== 'home') navigateTo('home');
-      setTimeout(function() { window.smoothScrollTo('#section-resources', 20); }, 150);
-    });
-  }
+    if (action === 'hero-search') {
+      e.preventDefault();
+      navigateTo('search');
+    } else if (action === 'hero-tutorials') {
+      e.preventDefault();
+      try { window.playSfx.click(); } catch(ex) {}
+      if (currentSubView !== 'home') { navigateTo('home'); }
+      setTimeout(function() { window.smoothScrollTo('#section-tutorials', 20); }, 200);
+    } else if (action === 'hero-resources') {
+      e.preventDefault();
+      try { window.playSfx.click(); } catch(ex) {}
+      if (currentSubView !== 'home') { navigateTo('home'); }
+      setTimeout(function() { window.smoothScrollTo('#section-resources', 20); }, 200);
+    } else if (action === 'import-template') {
+      e.preventDefault();
+      var tplKey = target.getAttribute('data-template');
+      importTemplate(tplKey);
+    }
+  });
 
   function navigateTo(view, data) {
     if (view !== 'detail') previousSubView = view;
@@ -590,6 +591,38 @@
   }
 
   /* ========== Todolist 管理 ========== */
+  function importTemplate(tplKey) {
+    if (!currentUser) return;
+    var tpl = MC_DATA.templates[tplKey];
+    if (!tpl) return;
+    var list = getTodolist(currentUser);
+    var addedCount = 0;
+    tpl.items.forEach(function(item) {
+      // 检查是否已存在同名任务（忽略大小写和空格差异）
+      var exists = list.some(function(existing) {
+        return existing.name.replace(/\s+/g, '').toLowerCase() === item.name.replace(/\s+/g, '').toLowerCase();
+      });
+      if (!exists) {
+        list.push({
+          id: Date.now().toString(36) + Math.random().toString(36).substr(2, 6),
+          tutorialId: 'tpl_' + tplKey + '_' + item.name,
+          name: item.name,
+          category: item.category,
+          icon: item.icon,
+          difficulty: item.difficulty || 'medium',
+          addedAt: Date.now(),
+          completed: false,
+          xpAwarded: false
+        });
+        addedCount++;
+      }
+    });
+    saveTodolist(currentUser, list);
+    try { window.playSfx.questAdd(); } catch(e) {}
+    showToast('📥 已导入「' + tpl.name + '」: +' + addedCount + ' 项任务', '');
+    renderTodolist();
+  }
+
   function addToTodolist(tutorial) {
     if (!currentUser) return;
     var list = getTodolist(currentUser);
@@ -700,6 +733,32 @@
         '<div class="quest-stat-card"><div class="quest-stat-val blue">' + (xpData.totalCompleted || 0) + '</div><div class="quest-stat-lbl">🏆 总计</div></div>' +
         '<div class="quest-stat-card"><div class="quest-stat-val">' + list.length + '</div><div class="quest-stat-lbl">📦 全部</div></div>' +
       '</div>';
+
+    // 模板导入按钮
+    var templates = MC_DATA.templates;
+    html += '' +
+      '<div class="quest-template-section">' +
+        '<div class="quest-template-label">📥 一键导入模板</div>' +
+        '<div class="quest-template-btns">' +
+          '<button class="quest-template-btn redstone" data-action="import-template" data-template="redstone">' +
+            '<span class="qt-icon">⚙️</span>' +
+            '<span class="qt-info">' +
+              '<span class="qt-name">' + templates.redstone.name + '</span>' +
+              '<span class="qt-desc">' + templates.redstone.description + '</span>' +
+            '</span>' +
+            '<span class="qt-count">+' + templates.redstone.items.length + '</span>' +
+          '</button>' +
+          '<button class="quest-template-btn building" data-action="import-template" data-template="building">' +
+            '<span class="qt-icon">🏛️</span>' +
+            '<span class="qt-info">' +
+              '<span class="qt-name">' + templates.building.name + '</span>' +
+              '<span class="qt-desc">' + templates.building.description + '</span>' +
+            '</span>' +
+            '<span class="qt-count">+' + templates.building.items.length + '</span>' +
+          '</button>' +
+        '</div>' +
+      '</div>';
+
 
     if (list.length === 0) {
       html += '' +
