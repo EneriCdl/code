@@ -839,3 +839,436 @@ body::before {
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
   z-index: 1;
 }
+
+/* ============================================================
+   QUEST LOG (任务日志风格 To-Do List)
+   ============================================================ */
+
+/* 任务书卷容器 */
+.quest-log {
+  max-width: 740px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* 经验条区域 */
+.quest-xp-bar-wrap {
+  background: rgba(30,30,30,0.9);
+  border: 3px solid #1a1a1a;
+  box-shadow: inset 2px 2px 0 rgba(0,0,0,0.5), inset -1px -1px 0 rgba(255,255,255,0.1);
+  padding: 14px 18px;
+  margin-bottom: 18px;
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.quest-xp-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+  animation: pixelPulse 2s ease-in-out infinite;
+}
+.quest-xp-info {
+  flex: 1;
+  min-width: 0;
+}
+.quest-xp-label {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: #aaa;
+  margin-bottom: 5px;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: space-between;
+}
+.quest-xp-label span {
+  color: var(--mc-gold);
+}
+.quest-xp-bar-outer {
+  height: 12px;
+  background: #1a1a1a;
+  border: 2px solid #3a3a3a;
+  box-shadow: inset 1px 1px 0 rgba(0,0,0,0.6);
+  overflow: hidden;
+}
+.quest-xp-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, #3d8b28, #5da83d, #3d8b28);
+  background-size: 20px 100%;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+  transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  image-rendering: pixelated;
+}
+.quest-xp-level {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: var(--mc-gold);
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.6);
+  flex-shrink: 0;
+  min-width: 50px;
+  text-align: center;
+  line-height: 1.3;
+}
+.quest-xp-level .lv-num {
+  font-size: 22px;
+  display: block;
+}
+
+/* 任务统计栏 */
+.quest-stats {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.quest-stat-card {
+  flex: 1;
+  background: rgba(60,60,60,0.88);
+  border: 2px solid #1a1a1a;
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.08), inset -1px -1px 0 rgba(0,0,0,0.3);
+  padding: 12px;
+  text-align: center;
+  backdrop-filter: blur(2px);
+}
+.quest-stat-val {
+  font-family: var(--font-pixel);
+  font-size: 18px;
+  color: #fff;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+}
+.quest-stat-val.gold { color: var(--mc-gold); }
+.quest-stat-val.green { color: var(--mc-grass); }
+.quest-stat-val.blue { color: var(--mc-diamond); }
+.quest-stat-lbl {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: #999;
+  margin-top: 4px;
+}
+
+/* 任务分组标题 */
+.quest-group-title {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: #ddd;
+  margin: 18px 0 8px;
+  padding: 8px 14px;
+  background: rgba(40,40,40,0.85);
+  border: 2px solid #1a1a1a;
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 1px;
+}
+.quest-group-count {
+  margin-left: auto;
+  color: #888;
+  font-size: 9px;
+}
+
+/* 单个任务卡片 - 任务日志风格 */
+.quest-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  margin-bottom: 6px;
+  background: rgba(80,80,80,0.85);
+  border: 2px solid #2a2a2a;
+  /* 像素化边框 - 四角缺口 */
+  clip-path: polygon(
+    4px 0, calc(100% - 4px) 0,
+    100% 4px, 100% calc(100% - 4px),
+    calc(100% - 4px) 100%, 4px 100%,
+    0 calc(100% - 4px), 0 4px
+  );
+  box-shadow: inset 2px 2px 0 rgba(255,255,255,0.06), inset -2px -2px 0 rgba(0,0,0,0.25);
+  cursor: pointer;
+  transition: all 0.12s ease;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(1px);
+}
+.quest-card:hover {
+  background: rgba(100,100,100,0.85);
+  border-color: #4a4a4a;
+  transform: translateX(3px);
+  box-shadow: inset 2px 2px 0 rgba(255,255,255,0.1), inset -2px -2px 0 rgba(0,0,0,0.3), 3px 3px 0 rgba(0,0,0,0.2);
+}
+.quest-card.completed {
+  opacity: 0.55;
+  background: rgba(50,70,50,0.75);
+  border-color: #2a4a2a;
+}
+.quest-card.completed:hover {
+  opacity: 0.7;
+}
+
+/* 任务勾选框 - MC风格 */
+.quest-checkbox {
+  width: 30px; height: 30px;
+  flex-shrink: 0;
+  background: #3a3a3a;
+  border: 3px solid #1a1a1a;
+  box-shadow:
+    inset -2px -2px 0 rgba(255,255,255,0.12),
+    inset 2px 2px 0 rgba(0,0,0,0.45);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  color: transparent;
+  transition: all 0.15s ease;
+  position: relative;
+}
+.quest-checkbox:hover {
+  background: #4a4a4a;
+}
+.quest-checkbox.checked {
+  background: #3d8b28;
+  border-color: #2a6b18;
+  color: #fff;
+  box-shadow:
+    inset -2px -2px 0 rgba(255,255,255,0.2),
+    inset 2px 2px 0 rgba(0,0,0,0.25),
+    0 0 8px rgba(61,139,40,0.4);
+  animation: questCheckPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes questCheckPop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+/* 任务信息 */
+.quest-info {
+  flex: 1;
+  min-width: 0;
+}
+.quest-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: #f0f0f0;
+  margin-bottom: 3px;
+  letter-spacing: 0.5px;
+}
+.quest-card.completed .quest-name {
+  text-decoration: line-through;
+  color: #999;
+}
+.quest-meta-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.quest-date {
+  font-size: 11px;
+  color: #999;
+}
+.quest-difficulty-indicator {
+  font-size: 12px;
+}
+
+/* 任务右上角书签 */
+.quest-bookmark {
+  position: absolute;
+  top: -2px; right: -2px;
+  width: 0; height: 0;
+  border-left: 14px solid transparent;
+  border-bottom: 14px solid var(--mc-gold);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.quest-card:hover .quest-bookmark {
+  opacity: 0.7;
+}
+
+/* 任务删除按钮 */
+.quest-delete {
+  width: 30px; height: 30px;
+  flex-shrink: 0;
+  background: rgba(180,50,50,0.7);
+  border: 2px solid #1a1a1a;
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.1), inset -1px -1px 0 rgba(0,0,0,0.2);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.1s;
+}
+.quest-delete:hover {
+  background: #c0392b;
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.15), 0 0 6px rgba(200,50,50,0.3);
+}
+
+/* 空任务日志 */
+.quest-empty {
+  text-align: center;
+  padding: 50px 20px;
+  background: rgba(60,60,60,0.85);
+  border: 3px solid #2a2a2a;
+  box-shadow: inset -2px -2px 0 rgba(255,255,255,0.05), inset 2px 2px 0 rgba(0,0,0,0.3);
+  backdrop-filter: blur(2px);
+}
+.quest-empty .empty-icon {
+  font-size: 56px;
+  margin-bottom: 12px;
+  animation: pixelPulse 2.5s ease-in-out infinite;
+}
+.quest-empty h3 {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: #ccc;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+  margin-bottom: 8px;
+}
+.quest-empty p {
+  color: #999;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+/* ============================================================
+   精修像素细节
+   ============================================================ */
+
+/* 卡片网格增强 */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+/* 卡片悬停像素效果 */
+.mc-card {
+  transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.1s ease, border-color 0.1s ease;
+}
+.mc-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  border-color: var(--mc-gold);
+  box-shadow:
+    inset -2px -2px 0 rgba(255,255,255,0.3),
+    inset 2px 2px 0 rgba(0,0,0,0.3),
+    0 8px 0 rgba(0,0,0,0.25),
+    0 0 20px rgba(245,205,59,0.12);
+}
+
+/* 卡片图标像素框 */
+.mc-card .card-icon {
+  image-rendering: pixelated;
+  border: 3px solid #1a1a1a;
+  box-shadow:
+    inset -2px -2px 0 rgba(255,255,255,0.2),
+    inset 2px 2px 0 rgba(0,0,0,0.4),
+    0 2px 0 rgba(0,0,0,0.3);
+  background: linear-gradient(135deg, #6b6b6b, #5a5a5a);
+}
+
+/* 按钮增强 - 像素高亮按压 */
+.mc-btn {
+  position: relative;
+  transition: all 0.06s step-end;
+  image-rendering: pixelated;
+}
+.mc-btn:active {
+  transition: all 0.02s step-end;
+}
+/* 按钮闪烁提示 */
+.mc-btn.glow-hint {
+  animation: btnGlow 2s ease-in-out infinite;
+}
+@keyframes btnGlow {
+  0%, 100% { box-shadow: inset 2px 2px 0 rgba(255,255,255,0.3), inset -2px -2px 0 rgba(0,0,0,0.35); }
+  50% { box-shadow: inset 2px 2px 0 rgba(255,255,255,0.5), inset -2px -2px 0 rgba(0,0,0,0.35), 0 0 14px rgba(245,205,59,0.35); }
+}
+
+/* 输入框像素焦点 */
+.mc-input {
+  transition: border-color 0.1s step-end, box-shadow 0.1s step-end;
+}
+
+/* Navbar 像素连接处 */
+.mc-navbar .nav-link {
+  position: relative;
+}
+.mc-navbar .nav-link::after {
+  content: '';
+  position: absolute; bottom: 0; left: 4px; right: 4px;
+  height: 3px;
+  background: transparent;
+  transition: background 0.1s;
+}
+.mc-navbar .nav-link.active::after {
+  background: var(--mc-gold);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.2), 0 -1px 0 rgba(0,0,0,0.3);
+}
+
+/* 徽章增强 */
+.mc-badge {
+  letter-spacing: 0.5px;
+  transition: transform 0.1s;
+}
+.mc-badge:hover {
+  transform: scale(1.08);
+}
+
+/* 详情页材料列表像素化 */
+.materials-list li {
+  transition: background 0.1s;
+  image-rendering: pixelated;
+}
+.materials-list li:hover {
+  background: rgba(100,100,100,0.7);
+}
+
+/* 筛选芯片增强 */
+.filter-chip {
+  transition: all 0.08s step-end;
+}
+.filter-chip.active {
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.2), 0 0 8px rgba(61,139,40,0.3);
+}
+
+/* Toast 像素化 */
+.mc-toast {
+  clip-path: polygon(
+    6px 0, calc(100% - 6px) 0,
+    100% 6px, 100% calc(100% - 6px),
+    calc(100% - 6px) 100%, 6px 100%,
+    0 calc(100% - 6px), 0 6px
+  );
+  image-rendering: pixelated;
+}
+
+/* 响应式网格增强 */
+@media (min-width: 641px) and (max-width: 960px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .quest-stats {
+    flex-wrap: wrap;
+  }
+  .quest-stat-card {
+    min-width: 80px;
+  }
+}
+@media (min-width: 961px) {
+  .card-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}
+@media (max-width: 640px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .quest-stats {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .quest-stat-card {
+    min-width: 60px;
+  }
+}

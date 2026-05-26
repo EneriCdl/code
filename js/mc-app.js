@@ -53,6 +53,7 @@
   const STORAGE_KEY_USERS = 'mc_workshop_users';
   const STORAGE_KEY_SESSION = 'mc_workshop_session';
   const STORAGE_KEY_TODOLIST_PREFIX = 'mc_workshop_todolist_';
+  const STORAGE_KEY_XP_PREFIX = 'mc_workshop_xp_';
 
   function getUsers() {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY_USERS)) || {}; }
@@ -87,6 +88,36 @@
 
   function saveTodolist(username, list) {
     localStorage.setItem(getTodolistKey(username), JSON.stringify(list));
+  }
+
+  function getXPKey(username) { return STORAGE_KEY_XP_PREFIX + username; }
+  function getUserXP(username) {
+    try { return JSON.parse(localStorage.getItem(getXPKey(username))) || { xp: 0, level: 1, totalCompleted: 0 }; }
+    catch(e) { return { xp: 0, level: 1, totalCompleted: 0 }; }
+  }
+  function saveUserXP(username, data) {
+    localStorage.setItem(getXPKey(username), JSON.stringify(data));
+  }
+  function xpForLevel(lv) { return lv * 30; }
+  function addXP(xpGain) {
+    if (!currentUser) return;
+    var data = getUserXP(currentUser);
+    data.xp += xpGain;
+    data.totalCompleted++;
+    var needed = xpForLevel(data.level);
+    var leveled = false;
+    while (data.xp >= needed) {
+      data.xp -= needed;
+      data.level++;
+      needed = xpForLevel(data.level);
+      leveled = true;
+    }
+    saveUserXP(currentUser, data);
+    return { data: data, leveled: leveled };
+  }
+  function getXpProgress(data) {
+    var needed = xpForLevel(data.level);
+    return { current: data.xp, needed: needed, pct: Math.min(100, Math.round(data.xp / needed * 100)) };
   }
 
   /* ========== 当前用户状态 ========== */
@@ -470,10 +501,9 @@
   function addToTodolist(tutorial) {
     if (!currentUser) return;
     var list = getTodolist(currentUser);
-    // 检查是否已存在
     var exists = list.some(function(item) { return item.tutorialId === tutorial.id; });
     if (exists) {
-      showToast('该教程已在待建清单中', 'warning');
+      showToast('该教程已在任务清单中', 'warning');
       return;
     }
     list.push({
@@ -482,22 +512,51 @@
       name: tutorial.name,
       category: tutorial.category,
       icon: tutorial.icon,
+      difficulty: tutorial.difficulty,
       addedAt: Date.now(),
       completed: false
     });
     saveTodolist(currentUser, list);
-    showToast('已加入待建清单！', '');
+    try { window.playSfx.questAdd(); } catch(e) {}
+    showToast('➕ 已加入任务日志！', '');
   }
 
-  function toggleTodoComplete(todoId) {
+  function toggleTodoComplete(todoId, checkboxEl) {
     if (!currentUser) return;
     var list = getTodolist(currentUser);
     var item = list.find(function(i) { return i.id === todoId; });
-    if (item) {
-      item.completed = !item.completed;
-      saveTodolist(currentUser, list);
-      renderTodolist();
+    if (!item) return;
+    var wasCompleted = item.completed;
+    item.completed = !item.completed;
+    saveTodolist(currentUser, list);
+
+    if (!wasCompleted && item.completed) {
+      // 完成任务：加XP
+      var xpMap = { easy: 10, medium: 25, hard: 50 };
+      var xpGain = xpMap[item.difficulty] || 15;
+      var result = addXP(xpGain);
+
+      try { window.playSfx.questComplete(); } catch(e) {}
+
+      // 粒子爆发
+      if (checkboxEl) {
+        var rect = checkboxEl.getBoundingClientRect();
+        try { window.pixelBurst(rect.left + rect.width/2, rect.top + rect.height/2, 14, '#ffd700'); } catch(e) {}
+        try { window.pixelShake(checkboxEl.closest('.quest-card'), 2, 200); } catch(e) {}
+      }
+      var xpInfo = getXpProgress(result.data);
+      showToast('✅ 任务完成！ +' + xpGain + ' XP (Lv.' + result.data.level + ' ' + xpInfo.current + '/' + xpInfo.needed + ')', '');
+
+      if (result.leveled) {
+        setTimeout(function() {
+          showToast('🌟 升级！达到 Lv.' + result.data.level + '！', '');
+          try { window.playSfx.questComplete(); } catch(e) {}
+        }, 600);
+      }
+    } else if (wasCompleted && !item.completed) {
+      try { window.playSfx.click(); } catch(e) {}
     }
+    renderTodolist();
   }
 
   function removeFromTodolist(todoId) {
@@ -505,8 +564,9 @@
     var list = getTodolist(currentUser);
     list = list.filter(function(i) { return i.id !== todoId; });
     saveTodolist(currentUser, list);
+    try { window.playSfx.error(); } catch(e) {}
     renderTodolist();
-    showToast('已从清单中移除', '');
+    showToast('🗑️ 任务已移除', '');
   }
 
   function renderTodolist() {
@@ -517,103 +577,107 @@
 
     if (!currentUser) return;
     var list = getTodolist(currentUser);
-
-    var html = '<h2 class="section-title">📋 我的待建清单</h2>';
-
-    if (list.length === 0) {
-      html += '' +
-        '<div class="todolist-empty">' +
-          '<div class="empty-icon">📦</div>' +
-          '<h3>还没有添加任何项目</h3>' +
-          '<p>去首页浏览教程，把想建造的机器和建筑加入清单吧！</p>' +
-          '<button class="mc-btn gold" id="btn-goto-home">🏠 去首页看看</button>' +
-        '</div>';
-      $('#todolist-content').innerHTML = html;
-      var gotoBtn = $('#btn-goto-home');
-      if (gotoBtn) {
-        gotoBtn.addEventListener('click', function() { navigateTo('home'); });
-      }
-      return;
-    }
+    var xpData = getUserXP(currentUser);
+    var xpProg = getXpProgress(xpData);
 
     var pending = list.filter(function(i) { return !i.completed; });
     var completed = list.filter(function(i) { return i.completed; });
 
-    html += '<p style="margin-bottom:16px;color:#bbb;">共 <span class="highlight">' + list.length + '</span> 项，已完成 <span class="highlight">' + completed.length + '</span> 项</p>';
+    var html = '<div class="quest-log">';
 
-    if (pending.length > 0) {
-      html += '<h3 style="font-family:var(--font-pixel);font-size:10px;color:#ddd;margin-bottom:10px;">🔲 待建造 (' + pending.length + ')</h3>';
-      pending.forEach(function(item) {
-        html += renderTodoItem(item);
-      });
-    }
-
-    if (completed.length > 0) {
-      html += '<h3 style="font-family:var(--font-pixel);font-size:10px;color:#ddd;margin:16px 0 10px;">✅ 已完成 (' + completed.length + ')</h3>';
-      completed.forEach(function(item) {
-        html += renderTodoItem(item);
-      });
-    }
-
-    html += '<div style="margin-top:16px;text-align:center;">' +
-      '<button class="mc-btn red small" id="btn-clear-completed" style="' + (completed.length === 0 ? 'display:none;' : '') + '">🗑️ 清除已完成项目</button>' +
+    html += '' +
+      '<div class="quest-xp-bar-wrap">' +
+        '<div class="quest-xp-icon">⚔️</div>' +
+        '<div class="quest-xp-info">' +
+          '<div class="quest-xp-label"><span>冒险等级</span><span>' + xpProg.current + ' / ' + xpProg.needed + ' XP</span></div>' +
+          '<div class="quest-xp-bar-outer"><div class="quest-xp-bar-inner" style="width:' + xpProg.pct + '%;"></div></div>' +
+        '</div>' +
+        '<div class="quest-xp-level"><span class="lv-num">Lv.' + xpData.level + '</span></div>' +
       '</div>';
 
+    html += '' +
+      '<div class="quest-stats">' +
+        '<div class="quest-stat-card"><div class="quest-stat-val gold">' + pending.length + '</div><div class="quest-stat-lbl">📋 进行中</div></div>' +
+        '<div class="quest-stat-card"><div class="quest-stat-val green">' + completed.length + '</div><div class="quest-stat-lbl">✅ 已完成</div></div>' +
+        '<div class="quest-stat-card"><div class="quest-stat-val blue">' + (xpData.totalCompleted || 0) + '</div><div class="quest-stat-lbl">🏆 总计</div></div>' +
+        '<div class="quest-stat-card"><div class="quest-stat-val">' + list.length + '</div><div class="quest-stat-lbl">📦 全部</div></div>' +
+      '</div>';
+
+    if (list.length === 0) {
+      html += '' +
+        '<div class="quest-empty">' +
+          '<div class="empty-icon">📜</div>' +
+          '<h3>任务日志为空</h3>' +
+          '<p>前往首页浏览教程，将你想建造的项目加入任务日志吧！</p>' +
+          '<button class="mc-btn gold" id="btn-goto-home">🏠 浏览教程</button>' +
+        '</div>';
+    } else {
+      if (pending.length > 0) {
+        html += '<div class="quest-group-title">📋 进行中的任务 <span class="quest-group-count">' + pending.length + ' 项</span></div>';
+        pending.forEach(function(item) { html += renderQuestCard(item); });
+      }
+      if (completed.length > 0) {
+        html += '<div class="quest-group-title">✅ 已完成的任务 <span class="quest-group-count">' + completed.length + ' 项</span></div>';
+        completed.forEach(function(item) { html += renderQuestCard(item); });
+        html += '<div style="text-align:center;margin-top:16px;"><button class="mc-btn red small" id="btn-clear-completed">🗑️ 清除已完成任务</button></div>';
+      }
+    }
+    html += '</div>';
     $('#todolist-content').innerHTML = html;
 
-    // 绑定事件
-    $$('.todo-check').forEach(function(check) {
-      check.addEventListener('click', function() {
-        var todoId = this.getAttribute('data-todo-id');
-        toggleTodoComplete(todoId);
+    if (list.length === 0) {
+      var gotoBtn = $('#btn-goto-home');
+      if (gotoBtn) gotoBtn.addEventListener('click', function() { navigateTo('home'); });
+      return;
+    }
+
+    $$('.quest-checkbox').forEach(function(check) {
+      check.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleTodoComplete(this.getAttribute('data-todo-id'), this);
       });
     });
-    $$('.todo-remove').forEach(function(btn) {
-      btn.addEventListener('click', async function() {
-        var todoId = this.getAttribute('data-todo-id');
-        var ok = await confirmDialog('确定要移除这个项目吗？');
-        if (ok) removeFromTodolist(todoId);
+    $$('.quest-card').forEach(function(card) {
+      card.addEventListener('click', function() {
+        var t = MC_DATA.findById(this.getAttribute('data-tutorial-id'));
+        if (t) navigateTo('detail', t);
       });
     });
-    $$('.todo-name').forEach(function(name) {
-      name.addEventListener('click', function() {
-        var tutorialId = this.getAttribute('data-tutorial-id');
-        var tutorial = MC_DATA.findById(tutorialId);
-        if (tutorial) {
-          navigateTo('detail', tutorial);
-        }
+    $$('.quest-delete').forEach(function(btn) {
+      btn.addEventListener('click', async function(e) {
+        e.stopPropagation();
+        if (await confirmDialog('确定要放弃这个任务吗？')) removeFromTodolist(this.getAttribute('data-todo-id'));
       });
     });
     var clearBtn = $('#btn-clear-completed');
     if (clearBtn) {
       clearBtn.addEventListener('click', async function() {
-        var ok = await confirmDialog('确定要清除所有已完成的项目吗？');
-        if (ok && currentUser) {
-          var list = getTodolist(currentUser);
-          list = list.filter(function(i) { return !i.completed; });
-          saveTodolist(currentUser, list);
+        if (await confirmDialog('确定要清除所有已完成的任务吗？') && currentUser) {
+          var lst = getTodolist(currentUser).filter(function(i) { return !i.completed; });
+          saveTodolist(currentUser, lst);
           renderTodolist();
-          showToast('已清除完成项目', '');
+          showToast('已清除完成的任务', '');
         }
       });
     }
   }
 
-  function renderTodoItem(item) {
-    var catLabel = item.category === 'machine' ? '机器' : '建筑';
+  function renderQuestCard(item) {
+    var diffEmoji = item.difficulty === 'easy' ? '⭐' : item.difficulty === 'medium' ? '⭐✨' : '⭐💀';
+    var catLabel = item.category === 'machine' ? '生电机器' : '建筑教程';
     return '' +
-      '<div class="todo-item' + (item.completed ? ' completed' : '') + '">' +
-        '<div class="todo-check" data-todo-id="' + item.id + '">' +
-          (item.completed ? '✓' : '') +
-        '</div>' +
-        '<div class="todo-info">' +
-          '<div class="todo-name" data-tutorial-id="' + item.tutorialId + '">' + item.icon + ' ' + escapeHtml(item.name) + '</div>' +
-          '<div class="todo-meta">' +
+      '<div class="quest-card' + (item.completed ? ' completed' : '') + '" data-tutorial-id="' + item.tutorialId + '">' +
+        '<div class="quest-bookmark"></div>' +
+        '<div class="quest-checkbox' + (item.completed ? ' checked' : '') + '" data-todo-id="' + item.id + '">' + (item.completed ? '✓' : '') + '</div>' +
+        '<div class="quest-info">' +
+          '<div class="quest-name">' + item.icon + ' ' + escapeHtml(item.name) + '</div>' +
+          '<div class="quest-meta-row">' +
             '<span class="mc-badge ' + item.category + '">' + catLabel + '</span>' +
-            ' · 添加于 ' + formatDate(item.addedAt) +
+            '<span class="quest-difficulty-indicator">' + diffEmoji + '</span>' +
+            '<span class="quest-date">' + formatDate(item.addedAt) + '</span>' +
           '</div>' +
         '</div>' +
-        '<button class="todo-remove" data-todo-id="' + item.id + '" title="移除">✕</button>' +
+        '<button class="quest-delete" data-todo-id="' + item.id + '">✕</button>' +
       '</div>';
   }
 
