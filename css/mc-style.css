@@ -39,6 +39,17 @@
   margin: 0; padding: 0; box-sizing: border-box;
 }
 
+/* --- Canvas 像素背景 --- */
+#mc-bg-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
 /* --- Body / Background --- */
 body {
   font-family: var(--font-body);
@@ -51,29 +62,17 @@ body {
   -moz-osx-font-smoothing: unset;
 }
 
-/* Pixelated stone texture background */
+/* 旧纹理背景替换为简洁渐变，让 canvas 成为视觉主体 */
 body::before {
   content: '';
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  pointer-events: none; z-index: -2;
-  background:
-    /* stone base */
-    linear-gradient(0deg, #4a4a4a 0%, #5a5a5a 20%, #4d4d4d 50%, #555 80%, #484848 100%),
-    /* pixel noise */
-    repeating-conic-gradient(
-      rgba(0,0,0,0.03) 0% 25%,
-      rgba(255,255,255,0.02) 0% 50%
-    ) 0 0 / 8px 8px,
-    /* horizontal cracks */
-    repeating-linear-gradient(
-      0deg, transparent, transparent 7px,
-      rgba(0,0,0,0.06) 7px, rgba(0,0,0,0.06) 8px
-    ),
-    /* vertical cracks */
-    repeating-linear-gradient(
-      90deg, transparent, transparent 11px,
-      rgba(0,0,0,0.04) 11px, rgba(0,0,0,0.04) 12px
-    );
+  pointer-events: none; z-index: -1;
+  background: linear-gradient(180deg,
+    rgba(80,140,200,0.12) 0%,
+    rgba(90,160,80,0.08) 40%,
+    rgba(80,80,70,0.10) 70%,
+    rgba(50,50,50,0.15) 100%
+  );
 }
 
 /* --- Minecraft-Style Button (Raised) --- */
@@ -145,13 +144,14 @@ body::before {
 
 /* --- Minecraft-Style Panel (Recessed) --- */
 .mc-panel {
-  background: #8b8b8b;
+  background: rgba(139,139,139,0.88);
   border: 3px solid #1a1a1a;
   box-shadow:
     inset -2px -2px 0 rgba(255,255,255,0.15),
     inset 2px 2px 0 rgba(0,0,0,0.4);
   padding: 16px;
   border-radius: 0;
+  backdrop-filter: blur(2px);
 }
 
 /* --- Minecraft-Style Input --- */
@@ -182,7 +182,7 @@ body::before {
 
 /* --- Minecraft-Style Card --- */
 .mc-card {
-  background: #9b9b9b;
+  background: rgba(155,155,155,0.88);
   border: 3px solid #1a1a1a;
   box-shadow:
     inset -2px -2px 0 rgba(255,255,255,0.2),
@@ -191,6 +191,7 @@ body::before {
   cursor: pointer;
   transition: transform 0.08s ease, box-shadow 0.08s ease;
   overflow: hidden;
+  backdrop-filter: blur(2px);
 }
 .mc-card:hover {
   transform: translateY(-3px);
@@ -266,7 +267,7 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #5a5a5a;
+  background: rgba(90,90,90,0.92);
   border-bottom: 4px solid #1a1a1a;
   box-shadow:
     inset 0 2px 0 rgba(255,255,255,0.15),
@@ -275,6 +276,7 @@ body::before {
   position: sticky;
   top: 0;
   z-index: 100;
+  backdrop-filter: blur(4px);
 }
 .mc-navbar .nav-brand {
   font-family: var(--font-pixel);
@@ -327,7 +329,7 @@ body::before {
 }
 
 /* --- View Management --- */
-.view { display: none; }
+.view { display: none; position: relative; z-index: 1; }
 .view.active { display: block; }
 .sub-view { display: none; }
 .sub-view.active { display: block; }
@@ -345,13 +347,14 @@ body::before {
 .login-box {
   width: 100%;
   max-width: 420px;
-  background: #6b6b6b;
+  background: rgba(107,107,107,0.90);
   border: 4px solid #1a1a1a;
   box-shadow:
     inset 0 2px 0 rgba(255,255,255,0.25),
     0 8px 0 rgba(0,0,0,0.3);
   padding: 32px 28px;
   text-align: center;
+  backdrop-filter: blur(3px);
 }
 .login-box .login-icon {
   font-size: 56px;
@@ -478,7 +481,7 @@ body::before {
   margin: 0 auto;
 }
 .detail-hero {
-  background: #6b6b6b;
+  background: rgba(107,107,107,0.88);
   border: 4px solid #1a1a1a;
   box-shadow:
     inset 0 2px 0 rgba(255,255,255,0.25),
@@ -486,6 +489,7 @@ body::before {
   padding: 28px;
   margin-bottom: 20px;
   text-align: center;
+  backdrop-filter: blur(2px);
 }
 .detail-hero .detail-icon {
   font-size: 72px;
@@ -507,13 +511,14 @@ body::before {
   flex-wrap: wrap;
 }
 .detail-section {
-  background: #7b7b7b;
+  background: rgba(123,123,123,0.88);
   border: 3px solid #1a1a1a;
   box-shadow:
     inset -2px -2px 0 rgba(255,255,255,0.1),
     inset 2px 2px 0 rgba(0,0,0,0.3);
   padding: 20px;
   margin-bottom: 16px;
+  backdrop-filter: blur(2px);
 }
 .detail-section h3 {
   font-family: var(--font-pixel);
@@ -561,11 +566,12 @@ body::before {
 .todolist-empty {
   text-align: center;
   padding: 60px 20px;
-  background: #6b6b6b;
+  background: rgba(107,107,107,0.88);
   border: 3px solid #1a1a1a;
   box-shadow:
     inset -2px -2px 0 rgba(255,255,255,0.1),
     inset 2px 2px 0 rgba(0,0,0,0.3);
+  backdrop-filter: blur(2px);
 }
 .todolist-empty .empty-icon {
   font-size: 64px;
@@ -588,13 +594,14 @@ body::before {
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  background: #7b7b7b;
+  background: rgba(123,123,123,0.88);
   border: 3px solid #1a1a1a;
   box-shadow:
     inset -2px -2px 0 rgba(255,255,255,0.1),
     inset 2px 2px 0 rgba(0,0,0,0.3);
   margin-bottom: 8px;
   transition: all 0.15s ease;
+  backdrop-filter: blur(2px);
 }
 .todo-item.completed {
   opacity: 0.5;
@@ -656,11 +663,12 @@ body::before {
   text-align: center;
   padding: 28px 20px;
   border-top: 4px solid #1a1a1a;
-  background: #5a5a5a;
+  background: rgba(90,90,90,0.9);
   box-shadow: inset 0 2px 0 rgba(255,255,255,0.1);
   margin-top: 40px;
   position: relative;
   z-index: 1;
+  backdrop-filter: blur(4px);
 }
 .mc-footer p {
   font-size: 12px;

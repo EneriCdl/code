@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>MC工坊 - 我的世界建筑&机器教程</title>
-    <meta name="description" content="MC工坊 - 我的世界建筑教程和生电机器教程，包含刷石机、刷铁机、村民繁殖机、现代别墅、中世纪城堡等图文教程和B站视频链接">
+    <title>EN - 我的世界建筑&机器教程</title>
+    <meta name="description" content="EN - 我的世界建筑教程和生电机器教程，包含刷石机、刷铁机、村民繁殖机、现代别墅、中世纪城堡等图文教程和B站视频链接">
     <link rel="stylesheet" href="css/mc-style.css">
 </head>
 <body>
+
+    <!-- Minecraft 像素背景画布 -->
+    <canvas id="mc-bg-canvas"></canvas>
 
     <!-- ==================== 登录/注册页面 ==================== -->
     <div id="view-login" class="view active">
         <div class="login-container">
             <div class="login-box">
                 <div class="login-icon">⛏️</div>
-                <h1>M C 工 坊</h1>
+                <h1>E N</h1>
                 <p class="login-subtitle">我的世界 · 建筑&生电教程</p>
 
                 <div class="form-group">
@@ -48,7 +51,7 @@
 
         <!-- 顶部导航栏 (Minecraft Hotbar 风格) -->
         <nav class="mc-navbar">
-            <div class="nav-brand">⛏️ MC工坊</div>
+            <div class="nav-brand">⛏️ EN</div>
             <div class="nav-links">
                 <button class="nav-link active" id="nav-home">
                     <span class="nav-icon">🏠</span> 首页
@@ -73,7 +76,7 @@
                 <!-- 欢迎区域 -->
                 <div class="detail-hero" style="margin-bottom:28px;">
                     <div class="detail-icon">🏗️</div>
-                    <h2>欢迎来到 MC工坊</h2>
+                    <h2>欢迎来到 EN</h2>
                     <p style="color:#ccc;font-size:14px;margin-top:8px;">这里有最全的我的世界建筑教程和生电机器教程<br>搜索你想建造的项目，开始你的MC之旅！</p>
                     <div style="margin-top:16px;">
                         <button class="mc-btn gold large" id="btn-hero-search">🔍 搜索教程</button>
@@ -95,7 +98,7 @@
 
             <!-- 底部 -->
             <footer class="mc-footer">
-                <p>⛏️ MC工坊 — 我的世界建筑&生电教程平台</p>
+                <p>⛏️ EN — 我的世界建筑&生电教程平台</p>
                 <div class="footer-links">
                     <a href="https://github.com/EneriCdl/code" target="_blank" rel="noopener">
                         📦 GitHub: EneriCdl/code
@@ -107,7 +110,7 @@
                         📺 B站MC教程
                     </a>
                 </div>
-                <p style="margin-top:12px;font-size:10px;">Made with ❤️ | MC工坊 &copy; 2026</p>
+                <p style="margin-top:12px;font-size:10px;">Made with ❤️ | EN &copy; 2026</p>
             </footer>
         </div>
 
@@ -139,6 +142,7 @@
     </div>
 
     <!-- ==================== Scripts ==================== -->
+    <script src="js/mc-background.js"></script>
     <script src="js/mc-data.js"></script>
     <script src="js/mc-app.js"></script>
 </body>
