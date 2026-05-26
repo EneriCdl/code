@@ -87,13 +87,18 @@
                 <h2 class="section-title">⭐ 热门推荐</h2>
                 <div class="card-grid" id="home-featured-grid"></div>
 
-                <!-- 生电机器 -->
-                <h2 class="section-title">⚙️ 生电机器教程</h2>
-                <div class="card-grid" id="home-machines-grid"></div>
+                <!-- 建筑与生电（选项卡切换） -->
+                <h2 class="section-title">🏗️ 建筑与生电</h2>
+                <div class="mc-tabs">
+                  <button class="mc-tab active" data-tab="machines">⚙️ 生电科技</button>
+                  <button class="mc-tab" data-tab="buildings">🏛️ 建筑美学</button>
+                </div>
+                <div class="card-grid tab-panel active" id="home-machines-grid"></div>
+                <div class="card-grid tab-panel" id="home-buildings-grid"></div>
 
-                <!-- 建筑教程 -->
-                <h2 class="section-title">🏗️ 建筑教程</h2>
-                <div class="card-grid" id="home-buildings-grid"></div>
+                <!-- 材质包与光影 -->
+                <h2 class="section-title">🎨 材质包与光影</h2>
+                <div class="card-grid" id="home-resources-grid"></div>
             </div>
 
             <!-- 底部 -->

@@ -943,31 +943,191 @@ const MC_DATA = {
     }
   ],
 
+  /** 材质包与光影资源 */
+  resources: [
+    {
+      id: "faithful-32x",
+      name: "Faithful 32x",
+      type: "resource-pack",
+      icon: "🎨",
+      description: "最经典的默认风格高清材质包，32×32分辨率完美保留原版MC风格，画质提升明显且性能友好。MC圈装机率最高的材质包之一。",
+      version: "1.21.4",
+      tags: ["材质包", "默认风格", "高清", "经典"],
+      downloadUrl: "https://www.curseforge.com/minecraft/texture-packs/faithful-32x",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.9"
+    },
+    {
+      id: "misas-realistic",
+      name: "Misa's Realistic",
+      type: "resource-pack",
+      icon: "🖼️",
+      description: "写实风格材质包的代表作，细腻的纹理质感让MC世界焕然一新。方块表面细节丰富，光影搭配效果极佳，适合追求真实感的玩家。",
+      version: "1.21.4",
+      tags: ["材质包", "写实", "高清", "经典"],
+      downloadUrl: "https://www.curseforge.com/minecraft/texture-packs/misas-realistic",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.7"
+    },
+    {
+      id: "bare-bones",
+      name: "Bare Bones",
+      type: "resource-pack",
+      icon: "🎯",
+      description: "极简扁平化风格材质，色彩干净利落，完美复刻MC官方宣传片的视觉风格。低配机器也能流畅运行，颜值极高。",
+      version: "1.21.4",
+      tags: ["材质包", "扁平", "宣传片风格", "低配友好"],
+      downloadUrl: "https://www.curseforge.com/minecraft/texture-packs/bare-bones",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.8"
+    },
+    {
+      id: "compliance-64x",
+      name: "Compliance 64x",
+      type: "resource-pack",
+      icon: "💎",
+      description: "Faithful团队出品的64×64高清材质，细节更丰富。保留原版配色基调，方块纹理过渡自然，是Faithful爱好者的进阶之选。",
+      version: "1.21.4",
+      tags: ["材质包", "高清", "默认风格", "进阶"],
+      downloadUrl: "https://www.curseforge.com/minecraft/texture-packs/compliance-64x",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.6"
+    },
+    {
+      id: "rodrigos-8x8",
+      name: "Rodrigo's 8x8",
+      type: "resource-pack",
+      icon: "🟫",
+      description: "8×8超低分辨率像素材质，极简像素风。大幅降低显卡负担，适合集显或低配笔记本，同时获得独特的复古像素美感。",
+      version: "1.21.4",
+      tags: ["材质包", "像素", "低配", "复古"],
+      downloadUrl: "https://www.curseforge.com/minecraft/texture-packs/rodrigos-8x8",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.5"
+    },
+    {
+      id: "bsl-shaders",
+      name: "BSL Shaders",
+      type: "shader",
+      icon: "☀️",
+      description: "全球最受欢迎的光影包之一，光影效果均衡出色。柔和的光照、真实的水面反射、动态云朵和体积光，配置灵活可调，兼容性极强。",
+      version: "1.21.4",
+      tags: ["光影", "通用", "水反", "体积光"],
+      downloadUrl: "https://www.curseforge.com/minecraft/customization/bsl-shaders",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.9"
+    },
+    {
+      id: "complementary-shaders",
+      name: "Complementary Shaders",
+      type: "shader",
+      icon: "🌈",
+      description: "BSL的优化分支，光影效果更加细腻，色彩调教偏向温暖自然。内置多种预设方案，一键切换不同风格，对低配和中配设备都非常友好。",
+      version: "1.21.4",
+      tags: ["光影", "优化", "通用", "色彩"],
+      downloadUrl: "https://www.curseforge.com/minecraft/customization/complementary-shaders",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.9"
+    },
+    {
+      id: "sildurs-shaders",
+      name: "Sildur's Shaders",
+      type: "shader",
+      icon: "🌅",
+      description: "老牌光影包，提供从Low到Extreme多个版本。低配版集成显卡也能流畅运行，Extreme版拥有顶级画面表现。适合各种配置的玩家。",
+      version: "1.21.4",
+      tags: ["光影", "多版本", "通用", "老牌"],
+      downloadUrl: "https://www.curseforge.com/minecraft/customization/sildurs-shaders",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.7"
+    },
+    {
+      id: "seus-shaders",
+      name: "SEUS (Sonic Ether)",
+      type: "shader",
+      icon: "⚡",
+      description: "电影级画质光影，光线追踪效果惊艳。虽然对显卡要求较高，但画面效果在MC光影中属于天花板级别。适合高端显卡玩家。",
+      version: "1.21.4",
+      tags: ["光影", "光追", "高端", "电影级"],
+      downloadUrl: "https://www.sonicether.com/seus/",
+      downloadLabel: "官网下载",
+      rating: "★4.8"
+    },
+    {
+      id: "rethinking-voxels",
+      name: "Rethinking Voxels",
+      type: "shader",
+      icon: "🔮",
+      description: "基于Complementary的体素化光影革新，方块边缘发光效果独特。彩色光影穿透方块缝隙，营造出类似RTX的体素光照质感。",
+      version: "1.21.4",
+      tags: ["光影", "体素", "创新", "视觉效果"],
+      downloadUrl: "https://www.curseforge.com/minecraft/customization/rethinking-voxels",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.6"
+    },
+    {
+      id: "fresh-animations",
+      name: "Fresh Animations",
+      type: "resource-pack",
+      icon: "🏃",
+      description: "改变生物动画的全新材质包，让Minecraft所有生物的移动更加流畅自然。村民眨眼、怪物摇摆、生物眼神跟随——细节拉满的沉浸式体验。",
+      version: "1.21.4",
+      tags: ["材质包", "动画", "生物", "沉浸"],
+      downloadUrl: "https://www.curseforge.com/minecraft/texture-packs/fresh-animations",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.8"
+    },
+    {
+      id: "xksp-xekr",
+      name: "XeKr 方纹淡彩",
+      type: "resource-pack",
+      icon: "🌸",
+      description: "国内顶尖的原创材质包，独特的方纹淡彩风格将中国水墨美学融入像素方块。网格状纹理+柔和色彩，国风MC玩家的必装之选。",
+      version: "1.21.4",
+      tags: ["材质包", "国风", "中国", "原创"],
+      downloadUrl: "https://www.curseforge.com/minecraft/texture-packs/xekr-square-texture",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.8"
+    }
+  ],
+
+  /** 根据ID查找资源 */
+  findResourceById: function(id) {
+    return this.resources.find(r => r.id === id);
+  },
+
   /** 根据ID查找教程 */
   findById: function(id) {
     return this.tutorials.find(t => t.id === id);
   },
 
-  /** 搜索教程 */
+  /** 搜索教程+资源 */
   search: function(query, filters) {
     query = query.toLowerCase().trim();
     filters = filters || {};
-    return this.tutorials.filter(t => {
-      // 分类筛选
-      if (filters.category && filters.category !== 'all' && t.category !== filters.category) return false;
-      // 难度筛选
+    // 搜索教程
+    var results = this.tutorials.filter(function(t) {
+      if (filters.category && filters.category !== 'all' && filters.category !== 'resource' && t.category !== filters.category) return false;
       if (filters.difficulty && filters.difficulty !== 'all' && t.difficulty !== filters.difficulty) return false;
-      // 版本筛选
-      if (filters.version && filters.version !== 'all') {
-        if (!t.version.includes(filters.version)) return false;
-      }
-      // 文本搜索
+      if (filters.version && filters.version !== 'all') { if (!t.version.includes(filters.version)) return false; }
       if (query) {
-        const searchText = (t.name + ' ' + t.tags.join(' ') + ' ' + t.description + ' ' + t.category + ' ' + t.version).toLowerCase();
-        if (!searchText.includes(query)) return false;
+        var st = (t.name + ' ' + t.tags.join(' ') + ' ' + t.description + ' ' + t.category + ' ' + t.version).toLowerCase();
+        if (!st.includes(query)) return false;
       }
       return true;
     });
+    // 搜索资源
+    if (!filters.category || filters.category === 'all' || filters.category === 'resource') {
+      var resResults = this.resources.filter(function(r) {
+        if (query) {
+          var st = (r.name + ' ' + r.tags.join(' ') + ' ' + r.description + ' ' + r.type + ' ' + r.version).toLowerCase();
+          if (!st.includes(query)) return false;
+        }
+        return true;
+      });
+      results = results.concat(resResults);
+    }
+    return results;
   },
 
   /** 获取所有分类 */
@@ -975,7 +1135,8 @@ const MC_DATA = {
     return [
       { value: 'all', label: '全部' },
       { value: 'machine', label: '⚙️ 生电机器' },
-      { value: 'building', label: '🏗️ 建筑教程' }
+      { value: 'building', label: '🏗️ 建筑教程' },
+      { value: 'resource', label: '🎨 材质光影' }
     ];
   },
 

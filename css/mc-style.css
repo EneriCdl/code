@@ -1272,3 +1272,167 @@ body::before {
     min-width: 60px;
   }
 }
+
+/* ============================================================
+   MC 选项卡 (Tabs)
+   ============================================================ */
+.mc-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 16px;
+  border-bottom: 3px solid #1a1a1a;
+}
+.mc-tab {
+  flex: 1;
+  padding: 12px 20px;
+  background: rgba(80,80,80,0.85);
+  border: 3px solid #1a1a1a;
+  border-bottom: none;
+  color: #bbb;
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  cursor: pointer;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+  transition: all 0.08s ease;
+  position: relative;
+  backdrop-filter: blur(2px);
+}
+.mc-tab:hover {
+  background: rgba(100,100,100,0.85);
+  color: #fff;
+}
+.mc-tab.active {
+  background: rgba(120,120,120,0.9);
+  color: var(--mc-gold);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.1);
+  border-bottom: 3px solid var(--mc-gold);
+  margin-bottom: -3px;
+}
+.mc-tab.active::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--mc-gold);
+  box-shadow: 0 0 8px rgba(245,205,59,0.4);
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: grid; }
+
+/* ============================================================
+   资源卡片 (材质包 & 光影)
+   ============================================================ */
+.resource-card {
+  position: relative;
+  background: rgba(100,100,100,0.88);
+  border: 3px solid #1a1a1a;
+  box-shadow: inset 2px 2px 0 rgba(255,255,255,0.15), inset -2px -2px 0 rgba(0,0,0,0.35);
+  padding: 0;
+  overflow: hidden;
+  transition: all 0.15s ease;
+  backdrop-filter: blur(2px);
+}
+.resource-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--mc-diamond);
+  box-shadow: inset 2px 2px 0 rgba(255,255,255,0.2), inset -2px -2px 0 rgba(0,0,0,0.35), 0 8px 0 rgba(0,0,0,0.25), 0 0 24px rgba(76,201,240,0.15);
+}
+.resource-card .rc-topbar {
+  background: rgba(50,50,50,0.7);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 2px solid rgba(0,0,0,0.3);
+}
+.resource-card .rc-type-badge {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  padding: 3px 8px;
+  border: 2px solid #1a1a1a;
+  color: #fff;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+}
+.rc-type-badge.pack { background: #6b4fa0; }
+.rc-type-badge.shader { background: #c06030; }
+.resource-card .rc-rating {
+  margin-left: auto;
+  color: var(--mc-gold);
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+}
+.resource-card .rc-body {
+  padding: 16px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.resource-card .rc-icon {
+  width: 56px; height: 56px;
+  flex-shrink: 0;
+  background: rgba(60,60,60,0.8);
+  border: 3px solid #1a1a1a;
+  box-shadow: inset -2px -2px 0 rgba(255,255,255,0.1), inset 2px 2px 0 rgba(0,0,0,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  image-rendering: pixelated;
+}
+.resource-card .rc-info {
+  flex: 1;
+  min-width: 0;
+}
+.resource-card .rc-name {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: #fff;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+.resource-card .rc-desc {
+  font-size: 13px;
+  color: #d0d0d0;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+.resource-card .rc-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.resource-card .rc-tag { font-size: 10px; padding: 2px 7px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: #bbb; }
+.resource-card .rc-footer {
+  padding: 10px 16px;
+  border-top: 2px solid rgba(0,0,0,0.3);
+  background: rgba(40,40,40,0.5);
+  display: flex; align-items: center; gap: 10px;
+}
+.rc-download-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 18px;
+  background: #3b7cdc;
+  border: 2px solid #1a1a1a;
+  box-shadow: inset 2px 2px 0 rgba(255,255,255,0.2), inset -2px -2px 0 rgba(0,0,0,0.3);
+  color: #fff;
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  text-decoration: none; cursor: pointer;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+  transition: all 0.06s ease;
+  flex-shrink: 0;
+}
+.rc-download-btn:hover {
+  background: #5a96f0;
+  box-shadow: inset 2px 2px 0 rgba(255,255,255,0.3), inset -2px -2px 0 rgba(0,0,0,0.3), 0 0 16px rgba(59,124,220,0.4);
+  transform: translateY(-1px);
+}
+.rc-download-btn:active {
+  background: #2a6ac8;
+  box-shadow: inset -1px -1px 0 rgba(255,255,255,0.1), inset 2px 2px 0 rgba(0,0,0,0.3);
+  transform: translateY(1px);
+  transition: all 0.02s ease;
+}
+.rc-download-btn .dl-icon { font-size: 16px; }
+.rc-version-tag { font-family: var(--font-pixel); font-size: 8px; color: #aaa; margin-left: auto; }
+
+@media (max-width: 640px) {
+  .mc-tab { font-size: 7px; padding: 10px 12px; }
+  .resource-card .rc-body { flex-direction: column; align-items: center; text-align: center; }
+  .resource-card .rc-icon { width: 48px; height: 48px; font-size: 26px; }
+}

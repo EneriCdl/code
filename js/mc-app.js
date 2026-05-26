@@ -292,29 +292,100 @@
     $('#sub-detail').classList.remove('active');
     $('#sub-todolist').classList.remove('active');
 
+    // 热门推荐
     var featured = MC_DATA.getFeatured();
     var featuredHtml = '';
-    featured.forEach(function(t) {
-      featuredHtml += renderCard(t);
-    });
+    featured.forEach(function(t) { featuredHtml += renderCard(t); });
     $('#home-featured-grid').innerHTML = featuredHtml;
 
+    // 建筑与生电 — 选项卡切换
     var machines = MC_DATA.tutorials.filter(function(t) { return t.category === 'machine'; });
     var machineHtml = '';
-    machines.forEach(function(t) {
-      machineHtml += renderCard(t);
-    });
+    machines.forEach(function(t) { machineHtml += renderCard(t); });
     $('#home-machines-grid').innerHTML = machineHtml;
 
     var buildings = MC_DATA.tutorials.filter(function(t) { return t.category === 'building'; });
     var buildingHtml = '';
-    buildings.forEach(function(t) {
-      buildingHtml += renderCard(t);
-    });
+    buildings.forEach(function(t) { buildingHtml += renderCard(t); });
     $('#home-buildings-grid').innerHTML = buildingHtml;
+
+    // 选项卡切换事件
+    $$('.mc-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var tabName = this.getAttribute('data-tab');
+        // 更新tab高亮
+        $$('.mc-tab').forEach(function(t) { t.classList.remove('active'); });
+        this.classList.add('active');
+        // 切换面板
+        $$('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+        if (tabName === 'machines') {
+          $('#home-machines-grid').classList.add('active');
+        } else if (tabName === 'buildings') {
+          $('#home-buildings-grid').classList.add('active');
+        }
+      });
+    });
+    // 默认显示生电科技
+    $('#home-machines-grid').classList.add('active');
+    $('#home-buildings-grid').classList.remove('active');
+
+    // 材质包与光影
+    var resHtml = '';
+    MC_DATA.resources.forEach(function(r) {
+      resHtml += renderResourceCard(r);
+    });
+    $('#home-resources-grid').innerHTML = resHtml;
+
+    // 下载按钮事件
+    $$('.rc-download-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        try { window.playSfx.click(); } catch(ex) {}
+        var btnEl = this;
+        var origText = btnEl.innerHTML;
+        btnEl.innerHTML = '<span class="dl-icon">⏳</span> 跳转中...';
+        btnEl.style.background = '#3d8b28';
+        setTimeout(function() {
+          btnEl.innerHTML = origText;
+          btnEl.style.background = '#3b7cdc';
+        }, 1200);
+      });
+    });
 
     // 绑定卡片点击
     bindCardClicks();
+  }
+
+  /* 渲染资源卡片 */
+  function renderResourceCard(r) {
+    var typeLabel = r.type === 'resource-pack' ? '材质包' : '光影';
+    var typeClass = r.type === 'resource-pack' ? 'pack' : 'shader';
+    var tagsHtml = '';
+    r.tags.slice(0, 3).forEach(function(tag) {
+      tagsHtml += '<span class="rc-tag">' + escapeHtml(tag) + '</span>';
+    });
+    return '' +
+      '<div class="resource-card">' +
+        '<div class="rc-topbar">' +
+          '<span class="rc-type-badge ' + typeClass + '">' + typeLabel + '</span>' +
+          '<span class="mc-badge version">' + r.version + '</span>' +
+          '<span class="rc-rating">' + r.rating + '</span>' +
+        '</div>' +
+        '<div class="rc-body">' +
+          '<div class="rc-icon">' + r.icon + '</div>' +
+          '<div class="rc-info">' +
+            '<div class="rc-name">' + escapeHtml(r.name) + '</div>' +
+            '<div class="rc-desc">' + escapeHtml(r.description.substring(0, 80)) + '...</div>' +
+            '<div class="rc-tags">' + tagsHtml + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="rc-footer">' +
+          '<a href="' + r.downloadUrl + '" target="_blank" rel="noopener" class="rc-download-btn">' +
+            '<span class="dl-icon">📥</span> ' + r.downloadLabel +
+          '</a>' +
+          '<span class="rc-version-tag">MC ' + r.version + '</span>' +
+        '</div>' +
+      '</div>';
   }
 
   function renderCard(t) {
