@@ -514,7 +514,8 @@
       icon: tutorial.icon,
       difficulty: tutorial.difficulty,
       addedAt: Date.now(),
-      completed: false
+      completed: false,
+      xpAwarded: false
     });
     saveTodolist(currentUser, list);
     try { window.playSfx.questAdd(); } catch(e) {}
@@ -530,8 +531,10 @@
     item.completed = !item.completed;
     saveTodolist(currentUser, list);
 
-    if (!wasCompleted && item.completed) {
-      // 完成任务：加XP
+    if (!wasCompleted && item.completed && !item.xpAwarded) {
+      // 首次完成任务：加XP
+      item.xpAwarded = true;
+      saveTodolist(currentUser, list);
       var xpMap = { easy: 10, medium: 25, hard: 50 };
       var xpGain = xpMap[item.difficulty] || 15;
       var result = addXP(xpGain);
@@ -553,6 +556,9 @@
           try { window.playSfx.questComplete(); } catch(e) {}
         }, 600);
       }
+    } else if (!wasCompleted && item.completed && item.xpAwarded) {
+      // 重复完成（已领过XP），只有视觉变化，不再给XP
+      try { window.playSfx.click(); } catch(e) {}
     } else if (wasCompleted && !item.completed) {
       try { window.playSfx.click(); } catch(e) {}
     }

@@ -1,141 +1,46 @@
 /* ============================================================
-   EN - 丝滑滚动引擎 + 像素动画增强
+   EN - 原生平滑滚动 + 像素动画增强
    ============================================================ */
 
 (function() {
   'use strict';
 
-  /* ---- 全局平滑滚动 (Lenis-style) ---- */
-  var scrollY = 0;
-  var targetY = 0;
-  var velY = 0;
-  var rafId = null;
-  var ease = 0.075; // 惯性系数 (越小越丝滑但越"重")
+  /* ---- CSS 平滑滚动 ---- */
+  document.documentElement.style.scrollBehavior = 'smooth';
 
-  function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
-
-  function updateScroll() {
-    // 计算当前滚动位置 → 目标位置的插值
-    var dy = targetY - scrollY;
-    // 当差异极小时直接吸附
-    if (Math.abs(dy) < 0.08) {
-      scrollY = targetY;
-      velY = 0;
-    } else {
-      velY += dy * ease * 1.5;
-      velY *= 0.86;
-      scrollY += velY;
-      // 过冲保护
-      if ((velY > 0 && scrollY > targetY) || (velY < 0 && scrollY < targetY)) {
-        scrollY = targetY;
-        velY = 0;
-      }
-    }
-
-    // 应用到 DOM
-    window.scrollTo(0, Math.round(scrollY));
-
-    // 更新 CSS 变量供其他模块使用
+  /* ---- 滚动进度 CSS 变量 (供背景 canvas 使用) ---- */
+  function updateScrollVars() {
     var maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    var progress = maxScroll > 0 ? scrollY / maxScroll : 0;
+    var progress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
     document.documentElement.style.setProperty('--scroll-progress', progress.toFixed(4));
-    document.documentElement.style.setProperty('--scroll-y', Math.round(scrollY));
-
-    rafId = requestAnimationFrame(updateScroll);
+    document.documentElement.style.setProperty('--scroll-y', Math.round(window.scrollY));
   }
 
-  function onWheel(e) {
-    // 仅在主内容区启用平滑滚动
-    var maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    targetY = clamp(targetY + e.deltaY * 1.2, 0, Math.max(0, maxScroll));
-  }
-
-  function onTouchStart(e) {
-    if (e.touches.length === 1) {
-      this._touchY = e.touches[0].clientY;
-      this._touchTargetY = targetY;
-      this._touchVelY = velY;
-      velY = 0; // 触摸时停止惯性
+  var scrollTicking = false;
+  window.addEventListener('scroll', function() {
+    if (!scrollTicking) {
+      requestAnimationFrame(function() {
+        updateScrollVars();
+        scrollTicking = false;
+      });
+      scrollTicking = true;
     }
-  }
+  }, { passive: true });
+  updateScrollVars();
 
-  function onTouchMove(e) {
-    if (e.touches.length === 1 && this._touchY !== undefined) {
-      var dy = this._touchY - e.touches[0].clientY;
-      var maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      targetY = clamp(this._touchTargetY + dy, 0, Math.max(0, maxScroll));
-      scrollY = targetY; // 触摸时直接跟随
-    }
-  }
-
-  function onTouchEnd(e) {
-    this._touchY = undefined;
-  }
-
-  function onKeyDown(e) {
-    // 键盘导航也走平滑
-    var step = 80;
-    var maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    if (e.key === 'ArrowDown' || e.key === 'j') {
-      e.preventDefault();
-      targetY = clamp(targetY + step, 0, Math.max(0, maxScroll));
-    } else if (e.key === 'ArrowUp' || e.key === 'k') {
-      e.preventDefault();
-      targetY = clamp(targetY - step, 0, Math.max(0, maxScroll));
-    } else if (e.key === 'Home') {
-      e.preventDefault();
-      targetY = 0;
-    } else if (e.key === 'End') {
-      e.preventDefault();
-      targetY = Math.max(0, maxScroll);
-    }
-  }
-
-  function start() {
-    targetY = window.scrollY;
-    scrollY = targetY;
-    velY = 0;
-
-    // 禁用原生滚动，改用手动控制
-    document.documentElement.style.overflow = 'hidden';
-    document.documentElement.style.height = '100%';
-    document.body.style.overflow = 'hidden';
-    document.body.style.height = '100%';
-
-    // 创建一个滚动代理容器维持页面高度
-    var proxy = document.createElement('div');
-    proxy.id = 'scroll-proxy';
-    proxy.style.cssText = 'position:absolute;top:0;left:0;width:1px;pointer-events:none;visibility:hidden;';
-    document.body.appendChild(proxy);
-
-    function updateProxyHeight() {
-      var h = document.documentElement.scrollHeight;
-      proxy.style.height = h + 'px';
-      document.documentElement.style.minHeight = h + 'px';
-    }
-    updateProxyHeight();
-    // 监听内容变化
-    var ro = new ResizeObserver(updateProxyHeight);
-    ro.observe(document.body);
-
-    window.addEventListener('wheel', onWheel, { passive: false });
-    window.addEventListener('touchstart', onTouchStart, { passive: true });
-    window.addEventListener('touchmove', onTouchMove, { passive: true });
-    window.addEventListener('touchend', onTouchEnd, { passive: true });
-    window.addEventListener('keydown', onKeyDown, { passive: false });
-
-    updateScroll();
-  }
-
-  /* ---- 平滑锚点滚动 ---- */
+  /* ---- 平滑锚点滚动 (兼容回退) ---- */
   window.smoothScrollTo = function(targetEl, offset) {
     offset = offset || 0;
     if (typeof targetEl === 'string') targetEl = document.querySelector(targetEl);
     if (!targetEl) return;
-    var rect = targetEl.getBoundingClientRect();
-    var maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    // 直接从当前 scrollY 计算
-    targetY = clamp(scrollY + rect.top - offset, 0, Math.max(0, maxScroll));
+    try {
+      targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (offset) window.scrollBy({ top: offset, behavior: 'smooth' });
+    } catch(e) {
+      // 回退
+      var rect = targetEl.getBoundingClientRect();
+      window.scrollTo({ top: window.scrollY + rect.top - offset, behavior: 'smooth' });
+    }
   };
 
   /* ---- 像素震动动画 ---- */
@@ -226,12 +131,11 @@
   }
 
   window.playSfx = {
-    /** 任务完成音效 (类似MC经验球拾取) */
     questComplete: function() {
       var ctx = getAudioCtx();
       if (!ctx) return;
       var t = ctx.currentTime;
-      var notes = [523.3, 659.3, 784.0, 1046.5]; // C5 E5 G5 C6
+      var notes = [523.3, 659.3, 784.0, 1046.5];
       notes.forEach(function(freq, i) {
         var o = ctx.createOscillator();
         var g = ctx.createGain();
@@ -244,7 +148,6 @@
         o.start(t + i * 0.1); o.stop(t + i * 0.1 + 0.25);
       });
     },
-    /** 添加任务音效 (低沉短促) */
     questAdd: function() {
       var ctx = getAudioCtx();
       if (!ctx) return;
@@ -259,7 +162,6 @@
       o.connect(g); g.connect(ctx.destination);
       o.start(t); o.stop(t + 0.15);
     },
-    /** 点击音效 */
     click: function() {
       var ctx = getAudioCtx();
       if (!ctx) return;
@@ -273,7 +175,6 @@
       o.connect(g); g.connect(ctx.destination);
       o.start(t); o.stop(t + 0.04);
     },
-    /** 错误/删除音效 */
     error: function() {
       var ctx = getAudioCtx();
       if (!ctx) return;
@@ -289,26 +190,5 @@
       o.start(t); o.stop(t + 0.2);
     }
   };
-
-  /* ---- 启动平滑滚动 (桌面端) ---- */
-  var isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent);
-  if (!isMobile) {
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', start);
-    } else {
-      start();
-    }
-  } else {
-    // 移动端使用原生滚动但添加 CSS 平滑
-    document.documentElement.style.scrollBehavior = 'smooth';
-    // 仍然暴露 smoothScrollTo
-    window.smoothScrollTo = function(targetEl, offset) {
-      offset = offset || 0;
-      if (typeof targetEl === 'string') targetEl = document.querySelector(targetEl);
-      if (!targetEl) return;
-      targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      if (offset) window.scrollBy(0, offset);
-    };
-  }
 
 })();
