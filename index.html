@@ -74,13 +74,30 @@
             <div class="main-content">
 
                 <!-- 欢迎区域 -->
-                <div class="detail-hero" style="margin-bottom:28px;">
+                <div class="detail-hero" style="margin-bottom:20px;">
                     <div class="detail-icon">🏗️</div>
                     <h2>欢迎来到 EN</h2>
-                    <p style="color:#ccc;font-size:14px;margin-top:8px;">这里有最全的我的世界建筑教程和生电机器教程<br>搜索你想建造的项目，开始你的MC之旅！</p>
-                    <div style="margin-top:16px;">
-                        <button class="mc-btn gold large" id="btn-hero-search">🔍 搜索教程</button>
-                    </div>
+                    <p style="color:#ccc;font-size:14px;margin-top:8px;">这里有最全的我的世界建筑教程、生电机器和材质光影资源</p>
+                </div>
+
+                <!-- 快捷导航按钮 -->
+                <div class="hero-nav">
+                  <button class="hero-nav-btn hero-nav-btn-green" id="hero-nav-tutorials">
+                    <span class="hero-nav-icon">🏗️</span>
+                    <span class="hero-nav-text">
+                      <span class="hero-nav-title">建筑与生电教程</span>
+                      <span class="hero-nav-sub">25+机器教程 · 25+建筑教程</span>
+                    </span>
+                    <span class="hero-nav-arrow">▶</span>
+                  </button>
+                  <button class="hero-nav-btn hero-nav-btn-blue" id="hero-nav-resources">
+                    <span class="hero-nav-icon">🎨</span>
+                    <span class="hero-nav-text">
+                      <span class="hero-nav-title">材质包与光影下载</span>
+                      <span class="hero-nav-sub">12款精选资源 · 一键下载</span>
+                    </span>
+                    <span class="hero-nav-arrow">▶</span>
+                  </button>
                 </div>
 
                 <!-- 热门推荐 -->
@@ -88,7 +105,7 @@
                 <div class="card-grid" id="home-featured-grid"></div>
 
                 <!-- 建筑与生电（选项卡切换） -->
-                <h2 class="section-title">🏗️ 建筑与生电</h2>
+                <h2 class="section-title" id="section-tutorials">🏗️ 建筑与生电</h2>
                 <div class="mc-tabs">
                   <button class="mc-tab active" data-tab="machines">⚙️ 生电科技</button>
                   <button class="mc-tab" data-tab="buildings">🏛️ 建筑美学</button>
@@ -97,7 +114,7 @@
                 <div class="card-grid tab-panel" id="home-buildings-grid"></div>
 
                 <!-- 材质包与光影 -->
-                <h2 class="section-title">🎨 材质包与光影</h2>
+                <h2 class="section-title" id="section-resources">🎨 材质包与光影</h2>
                 <div class="card-grid" id="home-resources-grid"></div>
             </div>
 

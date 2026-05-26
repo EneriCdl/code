@@ -266,6 +266,25 @@
     heroSearchBtn.addEventListener('click', function() { navigateTo('search'); });
   }
 
+  /* ========== 快捷导航 Hero 按钮 ========== */
+  var heroNavTutorials = $('#hero-nav-tutorials');
+  var heroNavResources = $('#hero-nav-resources');
+  if (heroNavTutorials) {
+    heroNavTutorials.addEventListener('click', function() {
+      try { window.playSfx.click(); } catch(e) {}
+      // 先确保在首页
+      if (currentSubView !== 'home') navigateTo('home');
+      setTimeout(function() { window.smoothScrollTo('#section-tutorials', 20); }, 150);
+    });
+  }
+  if (heroNavResources) {
+    heroNavResources.addEventListener('click', function() {
+      try { window.playSfx.click(); } catch(e) {}
+      if (currentSubView !== 'home') navigateTo('home');
+      setTimeout(function() { window.smoothScrollTo('#section-resources', 20); }, 150);
+    });
+  }
+
   function navigateTo(view, data) {
     if (view !== 'detail') previousSubView = view;
     currentSubView = view;
