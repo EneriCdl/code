@@ -796,7 +796,10 @@
     });
     $$('.quest-card').forEach(function(card) {
       card.addEventListener('click', function() {
-        var t = MC_DATA.findById(this.getAttribute('data-tutorial-id'));
+        var tutId = this.getAttribute('data-tutorial-id');
+        var t = MC_DATA.findById(tutId);
+        // 模板导入的任务用名称模糊匹配
+        if (!t) t = MC_DATA.findByName(tutId);
         if (t) navigateTo('detail', t);
       });
     });

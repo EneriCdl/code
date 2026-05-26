@@ -1140,6 +1140,29 @@ const MC_DATA = {
     return this.resources.find(r => r.id === id);
   },
 
+  /** 根据名称模糊查找教程（模板任务跳转用） */
+  findByName: function(key) {
+    if (!key) return null;
+    var k = key.toLowerCase();
+    // 从 key 中提取关键词
+    var keywords = k.replace(/tpl_(redstone|building)_/i, '').replace(/[—\-：:，,。、\s]+/g, ' ').split(' ').filter(function(w) { return w.length >= 2; });
+    // 按匹配得分排序
+    var best = null;
+    var bestScore = 0;
+    this.tutorials.forEach(function(t) {
+      var name = t.name.toLowerCase();
+      var tags = t.tags.join(' ').toLowerCase();
+      var text = name + ' ' + tags;
+      var score = 0;
+      keywords.forEach(function(kw) {
+        if (text.indexOf(kw) !== -1) score += kw.length * 2;
+        if (name.indexOf(kw) !== -1) score += 5;
+      });
+      if (score > bestScore) { bestScore = score; best = t; }
+    });
+    return bestScore >= 4 ? best : null;
+  },
+
   /** 根据ID查找教程 */
   findById: function(id) {
     return this.tutorials.find(t => t.id === id);
