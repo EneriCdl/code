@@ -283,6 +283,13 @@
       e.preventDefault();
       var tplKey = target.getAttribute('data-template');
       importTemplate(tplKey);
+    } else if (action === 'open-quest') {
+      // 点击任务卡片 → 跳转教程详情
+      var tutId = target.getAttribute('data-tutorial-id');
+      if (!tutId) return;
+      var t = MC_DATA.findById(tutId);
+      if (!t) t = MC_DATA.findByName(tutId);
+      if (t) navigateTo('detail', t);
     }
   });
 
@@ -794,15 +801,6 @@
         toggleTodoComplete(this.getAttribute('data-todo-id'), this);
       });
     });
-    $$('.quest-card').forEach(function(card) {
-      card.addEventListener('click', function() {
-        var tutId = this.getAttribute('data-tutorial-id');
-        var t = MC_DATA.findById(tutId);
-        // 模板导入的任务用名称模糊匹配
-        if (!t) t = MC_DATA.findByName(tutId);
-        if (t) navigateTo('detail', t);
-      });
-    });
     $$('.quest-delete').forEach(function(btn) {
       btn.addEventListener('click', async function(e) {
         e.stopPropagation();
@@ -826,7 +824,7 @@
     var diffEmoji = item.difficulty === 'easy' ? '⭐' : item.difficulty === 'medium' ? '⭐✨' : '⭐💀';
     var catLabel = item.category === 'machine' ? '生电机器' : '建筑教程';
     return '' +
-      '<div class="quest-card' + (item.completed ? ' completed' : '') + '" data-tutorial-id="' + item.tutorialId + '">' +
+      '<div class="quest-card' + (item.completed ? ' completed' : '') + '" data-action="open-quest" data-tutorial-id="' + item.tutorialId + '">' +
         '<div class="quest-bookmark"></div>' +
         '<div class="quest-checkbox' + (item.completed ? ' checked' : '') + '" data-todo-id="' + item.id + '">' + (item.completed ? '✓' : '') + '</div>' +
         '<div class="quest-info">' +

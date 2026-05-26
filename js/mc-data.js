@@ -1143,24 +1143,30 @@ const MC_DATA = {
   /** 根据名称模糊查找教程（模板任务跳转用） */
   findByName: function(key) {
     if (!key) return null;
-    var k = key.toLowerCase();
-    // 从 key 中提取关键词
-    var keywords = k.replace(/tpl_(redstone|building)_/i, '').replace(/[—\-：:，,。、\s]+/g, ' ').split(' ').filter(function(w) { return w.length >= 2; });
-    // 按匹配得分排序
+    // 提取核心关键词：去掉模板前缀和描述部分
+    var clean = key.toLowerCase()
+      .replace(/tpl_(redstone|building)_/i, '')
+      .replace(/\s*[—\-].*$/, '')   // 去掉破折号后面的描述
+      .replace(/\s+/g, '');
+    if (clean.length < 2) return null;
     var best = null;
     var bestScore = 0;
     this.tutorials.forEach(function(t) {
-      var name = t.name.toLowerCase();
-      var tags = t.tags.join(' ').toLowerCase();
-      var text = name + ' ' + tags;
+      var name = t.name.toLowerCase().replace(/\s+/g, '');
+      var tags = t.tags.join('').toLowerCase();
+      var text = name + tags;
       var score = 0;
-      keywords.forEach(function(kw) {
-        if (text.indexOf(kw) !== -1) score += kw.length * 2;
-        if (name.indexOf(kw) !== -1) score += 5;
-      });
+      // 逐字符滑动匹配
+      for (var i = 0; i <= clean.length - 2; i++) {
+        var chunk = clean.substring(i, i + 2);
+        if (text.indexOf(chunk) !== -1) score++;
+      }
+      // 名称完全包含时加分
+      if (name.indexOf(clean) !== -1) score += 20;
+      if (clean.indexOf(name) !== -1) score += 20;
       if (score > bestScore) { bestScore = score; best = t; }
     });
-    return bestScore >= 4 ? best : null;
+    return bestScore >= 2 ? best : null;
   },
 
   /** 根据ID查找教程 */
