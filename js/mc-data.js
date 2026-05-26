@@ -1036,6 +1036,197 @@ const MC_DATA = {
         "侦测器检测后触发活塞收割",
         "漏斗收集系统"
       ]
+    },
+    // ==================== 经典老版本教程 ====================
+    {
+      id: "sand-duper-1-12",
+      name: "1.12.2 刷沙机/重力方块复制机",
+      category: "machine",
+      icon: "⏳",
+      description: "1.12.2版本经典的末地折跃门刷沙机，利用末地折跃门方块实体机制复制重力方块（沙子/沙砾/混凝土粉末）。老版本生电的核心机器之一。",
+      materials: ["末地折跃门 ×1", "活塞 ×8", "粘液块 ×4", "红石块 ×2", "侦测器 ×4", "漏斗 ×8", "箱子 ×4", "黑曜石 ×8"],
+      difficulty: "hard",
+      version: "1.12.2",
+      bilibiliSearch: "我的世界 1.12.2 刷沙机 教程",
+      tags: ["刷沙", "1.12.2", "重力方块", "经典"],
+      steps: [
+        "找到末地折跃门并定位复制位置",
+        "搭建活塞推动平台",
+        "连接侦测器时钟电路",
+        "重力方块落入折跃门后被复制",
+        "漏斗收集系统"
+      ]
+    },
+    {
+      id: "nether-mob-farm-1-12",
+      name: "1.12.2 下界猪人刷怪塔",
+      category: "machine",
+      icon: "👹",
+      description: "1.12.2版本在地狱基岩上层建造的经典猪人塔，利用地狱门刷怪机制大量生成僵尸猪人。获取金粒和经验的高效农场。",
+      materials: ["黑曜石 ×20", "打火石 ×1", "活板门 ×64", "漏斗 ×16", "箱子 ×8", "命名牌 ×2", "半砖 ×128"],
+      difficulty: "hard",
+      version: "1.12.2",
+      bilibiliSearch: "我的世界 1.12.2 下界猪人塔 教程",
+      tags: ["猪人塔", "1.12.2", "地狱", "金"],
+      steps: [
+        "在地狱基岩上层(Y=252+)搭建大型地狱门阵列",
+        "每个地狱门间隔铺活板门引导",
+        "使用命名猪人作为仇恨目标",
+        "引导猪人走入掉落通道",
+        "底部收集区处理"
+      ]
+    },
+    {
+      id: "mob-farm-1-12",
+      name: "1.12.2 主世界刷怪塔",
+      category: "machine",
+      icon: "🗡️",
+      description: "1.12.2版本的经典高空刷怪塔，利用水流集中+22格摔落机制。1.12刷怪机制与新版不同，效率更高，适合前期快速获取经验和掉落物。",
+      materials: ["圆石 ×192", "水桶 ×8", "活板门 ×32", "漏斗 ×8", "箱子 ×4", "火把 ×16"],
+      difficulty: "medium",
+      version: "1.12.2",
+      bilibiliSearch: "我的世界 1.12.2 刷怪塔 教程",
+      tags: ["刷怪塔", "1.12.2", "经验", "经典"],
+      steps: [
+        "在Y=200+搭建大型刷怪平台",
+        "使用水流将怪物推向中央水道",
+        "22格掉落通道让怪物残血",
+        "底部半砖处理方便击杀",
+        "漏斗收集掉落物"
+      ]
+    },
+    {
+      id: "iron-farm-1-16",
+      name: "1.16.5 刷铁机/铁傀儡农场",
+      category: "machine",
+      icon: "⚙️",
+      description: "1.16.5版本可用的高效刷铁机。利用村民+僵尸恐吓机制，在1.16版本中村民需要工作方块才能生成铁傀儡。经典的1.16生电入门机器。",
+      materials: ["村民 ×3", "床 ×3", "工作方块 ×3", "僵尸 ×1", "漏斗 ×6", "箱子 ×4", "玻璃 ×16", "熔岩 ×1"],
+      difficulty: "medium",
+      version: "1.16.5",
+      bilibiliSearch: "我的世界 1.16.5 刷铁机 教程",
+      tags: ["刷铁机", "1.16.5", "铁傀儡", "经典"],
+      steps: [
+        "在高空搭建3×3平台",
+        "放置3张床和工作方块",
+        "引入3个村民和1个僵尸",
+        "利用恐吓机制生成铁傀儡",
+        "底部熔岩+漏斗收集铁锭"
+      ]
+    },
+    {
+      id: "piglin-barter-1-16",
+      name: "1.16.5 猪灵交易机/以物易物农场",
+      category: "machine",
+      icon: "🪙",
+      description: "1.16.5版本的全自动猪灵交易农场，利用金锭与猪灵交易获取大量资源。可产出远古残骸、哭泣黑曜石、灵魂沙等稀有物品。",
+      materials: ["猪灵 ×8", "金锭 ×64", "漏斗 ×12", "箱子 ×6", "活板门 ×16", "命名牌 ×4", "矿车 ×2", "铁轨 ×16"],
+      difficulty: "medium",
+      version: "1.16.5",
+      bilibiliSearch: "我的世界 1.16.5 猪灵交易机 教程",
+      tags: ["猪灵", "交易", "1.16.5", "以物易物"],
+      steps: [
+        "建造封闭交易空间",
+        "安置命名后的猪灵",
+        "漏斗系统自动投喂金锭",
+        "收集猪灵回赠的物品",
+        "分类储存系统"
+      ]
+    },
+    {
+      id: "ancient-debris-miner-1-16",
+      name: "1.16.5 远古残骸爆破机",
+      category: "machine",
+      icon: "💣",
+      description: "1.16.5版本利用TNT复制机+盾构机的大型远古残骸挖掘机。在下界Y=15层大面积爆破，高效获取下界合金升级材料。",
+      materials: ["TNT ×1", "粘液块 ×16", "活塞 ×12", "侦测器 ×8", "黑曜石 ×8", "珊瑚扇 ×1", "漏斗 ×8", "箱子 ×4"],
+      difficulty: "hard",
+      version: "1.16.5",
+      bilibiliSearch: "我的世界 1.16.5 远古残骸 挖掘 教程",
+      tags: ["远古残骸", "1.16.5", "TNT", "下界合金"],
+      steps: [
+        "在下界Y=15挖掘隧道",
+        "搭建TNT复制机阵列",
+        "安装飞行器自动前进",
+        "爆破后手动收集远古残骸",
+        "配合床爆破清理大面积"
+      ]
+    },
+    {
+      id: "deepslate-cobble-1-18",
+      name: "1.18.2 深板岩刷石机",
+      category: "machine",
+      icon: "🪨",
+      description: "1.18.2版本适配的深板岩刷石机。1.18起地下新增深板岩层，此机器在Y=0以下利用熔岩+水生成深板岩圆石，是深板岩建筑的必备农场。",
+      materials: ["熔岩桶 ×2", "水桶 ×1", "活塞 ×6", "红石粉 ×10", "侦测器 ×2", "漏斗 ×4", "箱子 ×2", "黑曜石 ×4"],
+      difficulty: "easy",
+      version: "1.18.2",
+      bilibiliSearch: "我的世界 1.18 深板岩 刷石机 教程",
+      tags: ["深板岩", "1.18.2", "刷石", "地下"],
+      steps: [
+        "在Y=-30以下挖掘平台",
+        "在一端放置熔岩，另一端放水",
+        "在交汇处安装活塞阵列",
+        "侦测器检测石块生成触发推动",
+        "漏斗收集深板岩圆石"
+      ]
+    },
+    {
+      id: "amethyst-farm-1-18",
+      name: "1.18.2 紫水晶农场",
+      category: "machine",
+      icon: "💜",
+      description: "1.18.2版本的全自动紫水晶农场。利用紫水晶母岩+ budding amethyst的自然生长机制，配合侦测器收割紫水晶簇。纯装饰材料的主要来源。",
+      materials: ["紫水晶母岩 ×8", "侦测器 ×8", "活塞 ×8", "红石粉 ×12", "漏斗 ×6", "箱子 ×4", "玻璃 ×16"],
+      difficulty: "medium",
+      version: "1.18.2",
+      bilibiliSearch: "我的世界 1.18 紫水晶 农场 教程",
+      tags: ["紫水晶", "1.18.2", "装饰", "自动"],
+      steps: [
+        "找到紫水晶洞并定位母岩",
+        "在母岩周围留出生长空间",
+        "安装侦测器检测紫水晶簇状态",
+        "成熟时触发活塞收割",
+        "漏斗收集系统"
+      ]
+    },
+    {
+      id: "warden-farm-1-18",
+      name: "1.18.2 循声守卫农场/幽匿催化剂机",
+      category: "machine",
+      icon: "👂",
+      description: "1.18.2版本在Deep Dark群系建造的循声守卫农场。利用幽匿尖啸体召唤守卫后自动化击杀，获取幽匿催化剂用于幽匿系列方块生产。",
+      materials: ["羊毛 ×64", "幽匿尖啸体 ×8", "活板门 ×16", "漏斗 ×8", "箱子 ×4", "萤石 ×16", "铁傀儡 ×2"],
+      difficulty: "hard",
+      version: "1.18.2",
+      bilibiliSearch: "我的世界 1.18 循声守卫 农场 教程",
+      tags: ["循声守卫", "1.18.2", "幽匿", "高级"],
+      steps: [
+        "在Deep Dark找到幽匿尖啸体",
+        "铺设羊毛防止振动传播",
+        "搭建守卫生成平台",
+        "使用铁傀儡自动击杀守卫",
+        "漏斗收集幽匿催化剂"
+      ]
+    },
+    {
+      id: "raid-farm-1-16",
+      name: "1.16.5 袭击农场/绿宝石农场",
+      category: "machine",
+      icon: "🏹",
+      description: "1.16.5版本的经典袭击农场，利用不祥之兆触发多次袭击波次。大量产出绿宝石、不死图腾和鞍，村民交易经济的核心支撑。",
+      materials: ["村民 ×1", "床 ×1", "工作方块 ×1", "活板门 ×16", "玻璃 ×32", "漏斗 ×8", "箱子 ×4", "岩浆块 ×8"],
+      difficulty: "hard",
+      version: "1.16.5",
+      bilibiliSearch: "我的世界 1.16.5 袭击农场 教程",
+      tags: ["袭击", "1.16.5", "绿宝石", "高级"],
+      steps: [
+        "在掠夺者前哨站附近选址",
+        "建造村民安全区并放置床+工作方块",
+        "搭建袭击怪物的掉落通道",
+        "使用岩浆块处理掠夺者",
+        "漏斗收集绿宝石和不死图腾"
+      ]
     }
   ],
 
@@ -1246,6 +1437,103 @@ const MC_DATA = {
       downloadUrl: "https://www.curseforge.com/minecraft/customization/kappa-shader",
       downloadLabel: "CurseForge 下载",
       rating: "★4.6"
+    },
+    // ==================== 经典老版本资源 ====================
+    {
+      id: "faithful-1-12",
+      name: "Faithful 32x (1.12.2)",
+      type: "resource-pack",
+      icon: "🎨",
+      description: "Faithful高清材质的1.12.2适配版。经典32×32分辨率完美保留原版MC风格，画质提升明显。1.12.2是模组最丰富的版本，Faithful是其最受欢迎的材质搭档。",
+      version: "1.12.2",
+      tags: ["材质包", "1.12.2", "经典", "高清"],
+      downloadUrl: "https://www.curseforge.com/minecraft/texture-packs/faithful-32x/files?filter-game-version=2020709689%3A628",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.9"
+    },
+    {
+      id: "faithful-1-16",
+      name: "Faithful 32x (1.16.5)",
+      type: "resource-pack",
+      icon: "🎨",
+      description: "Faithful高清材质1.16.5版本。在经典画风基础上完美适配下界更新内容，新增下界合金、猪灵等材质。1.16.5模组包玩家的标配材质。",
+      version: "1.16.5",
+      tags: ["材质包", "1.16.5", "经典", "高清"],
+      downloadUrl: "https://www.curseforge.com/minecraft/texture-packs/faithful-32x/files?filter-game-version=2020709689%3A7086",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.9"
+    },
+    {
+      id: "faithful-1-18",
+      name: "Faithful 32x (1.18.2)",
+      type: "resource-pack",
+      icon: "🎨",
+      description: "Faithful材质1.18适配版。完美支持洞穴与山崖更新，New mountain和Deep Dark生物群系的新材质均已覆盖。1.18建筑党的最爱。",
+      version: "1.18.2",
+      tags: ["材质包", "1.18.2", "经典", "高清"],
+      downloadUrl: "https://www.curseforge.com/minecraft/texture-packs/faithful-32x/files?filter-game-version=2020709689%3A7663",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.9"
+    },
+    {
+      id: "seus-1-12",
+      name: "SEUS v11 (1.12.2)",
+      type: "shader",
+      icon: "⚡",
+      description: "SEUS v11经典版光影，专为1.12.2优化。华丽的体积光+真实水面反射+柔和阴影，是1.12.2时代光影的天花板。搭配高清材质包效果最佳。",
+      version: "1.12.2",
+      tags: ["光影", "1.12.2", "经典", "电影级"],
+      downloadUrl: "https://www.sonicether.com/seus/",
+      downloadLabel: "官网下载",
+      rating: "★4.8"
+    },
+    {
+      id: "bsl-1-16",
+      name: "BSL Shaders (1.16.5)",
+      type: "shader",
+      icon: "☀️",
+      description: "BSL光影1.16.5版本。1.16下界更新后BSL对下界光照做了专门优化，灵魂火和熔岩的光照效果极佳。中高配机器均可流畅运行。",
+      version: "1.16.5",
+      tags: ["光影", "1.16.5", "下界", "通用"],
+      downloadUrl: "https://www.curseforge.com/minecraft/customization/bsl-shaders/files?filter-game-version=2020709689%3A7086",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.9"
+    },
+    {
+      id: "sildurs-1-12",
+      name: "Sildur's Shaders (1.12.2)",
+      type: "shader",
+      icon: "🌅",
+      description: "Sildur's光影1.12.2版本。老牌光影包的经典版，提供从Low到Extreme多个版本。低配机器也能体验光影效果，1.12.2玩家群体最广的光影选择。",
+      version: "1.12.2",
+      tags: ["光影", "1.12.2", "多版本", "低配"],
+      downloadUrl: "https://www.curseforge.com/minecraft/customization/sildurs-shaders/files?filter-game-version=2020709689%3A628",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.7"
+    },
+    {
+      id: "complementary-1-18",
+      name: "Complementary Shaders (1.18.2)",
+      type: "shader",
+      icon: "🌈",
+      description: "Complementary光影1.18.2版本。完美适配洞穴与山崖更新的新光照系统，地下洞穴的光影效果尤其出色。1.18探索党的光影首选。",
+      version: "1.18.2",
+      tags: ["光影", "1.18.2", "洞穴", "色彩"],
+      downloadUrl: "https://www.curseforge.com/minecraft/customization/complementary-shaders/files?filter-game-version=2020709689%3A7663",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.9"
+    },
+    {
+      id: "photon-1-18",
+      name: "Photon Shader (1.18.2)",
+      type: "shader",
+      icon: "💫",
+      description: "Photon光影1.18.2版本。以极佳性能优化著称，中配显卡在1.18复杂地形中仍能保持流畅帧率。暖色调光照在1.18的山地群系表现惊艳。",
+      version: "1.18.2",
+      tags: ["光影", "1.18.2", "高性能", "山地"],
+      downloadUrl: "https://www.curseforge.com/minecraft/customization/photon-shader",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.7"
     }
   ],
 
