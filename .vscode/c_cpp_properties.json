@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "name": "STM32 ARM",
+            "includePath": [
+                "${workspaceFolder}/Core/Inc/**",
+                "${workspaceFolder}/Drivers/**/Inc/**",
+                "${workspaceFolder}/Middlewares/**/Inc/**",
+                "C:/Users/xuzhi/arm-toolchain/arm-gnu-toolchain-13.3.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/include/**",
+                "C:/Users/xuzhi/arm-toolchain/arm-gnu-toolchain-13.3.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-none-eabi/**/include/**"
+            ],
+            "defines": [
+                "USE_HAL_DRIVER",
+                "STM32F407xx"
+            ],
+            "compilerPath": "C:/Users/xuzhi/arm-toolchain/arm-gnu-toolchain-13.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-arm",
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+        }
+    ],
+    "version": 4
+}

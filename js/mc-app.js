@@ -261,8 +261,29 @@
   $('#nav-todolist').addEventListener('click', function() { navigateTo('todolist'); });
 
   /* ========== 事件委托：动态元素点击 ========== */
+  function findActionTarget(el) {
+    while (el && el !== document) {
+      if (el.getAttribute && el.getAttribute('data-action')) return el;
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  function scrollToSection(id, offset) {
+    offset = offset || 20;
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        var el = document.getElementById(id);
+        if (!el) return;
+        var rect = el.getBoundingClientRect();
+        if (rect.height === 0) return; // 元素不可见
+        window.scrollTo({ top: window.scrollY + rect.top - offset, behavior: 'smooth' });
+      });
+    });
+  }
+
   document.addEventListener('click', function(e) {
-    var target = e.target.closest ? e.target.closest('[data-action]') : null;
+    var target = e.target.closest ? e.target.closest('[data-action]') : findActionTarget(e.target);
     if (!target) return;
     var action = target.getAttribute('data-action');
 
@@ -273,18 +294,17 @@
       e.preventDefault();
       try { window.playSfx.click(); } catch(ex) {}
       if (currentSubView !== 'home') { navigateTo('home'); }
-      setTimeout(function() { window.smoothScrollTo('#section-tutorials', 20); }, 200);
+      scrollToSection('section-tutorials', 80);
     } else if (action === 'hero-resources') {
       e.preventDefault();
       try { window.playSfx.click(); } catch(ex) {}
       if (currentSubView !== 'home') { navigateTo('home'); }
-      setTimeout(function() { window.smoothScrollTo('#section-resources', 20); }, 200);
+      scrollToSection('section-resources', 80);
     } else if (action === 'import-template') {
       e.preventDefault();
       var tplKey = target.getAttribute('data-template');
       importTemplate(tplKey);
     } else if (action === 'open-quest') {
-      // 点击任务卡片 → 跳转教程详情
       var tutId = target.getAttribute('data-tutorial-id');
       if (!tutId) return;
       var t = MC_DATA.findById(tutId);
@@ -326,24 +346,15 @@
     $('#home-featured-grid').innerHTML = featuredHtml;
 
     // 建筑与生电 — 选项卡切换
-    var machines = MC_DATA.tutorials.filter(function(t) { return t.category === 'machine'; });
-    var machineHtml = '';
-    machines.forEach(function(t) { machineHtml += renderCard(t); });
-    $('#home-machines-grid').innerHTML = machineHtml;
-
-    var buildings = MC_DATA.tutorials.filter(function(t) { return t.category === 'building'; });
-    var buildingHtml = '';
-    buildings.forEach(function(t) { buildingHtml += renderCard(t); });
-    $('#home-buildings-grid').innerHTML = buildingHtml;
+    renderHomeTutorials();
+    renderHomeResources();
 
     // 选项卡切换事件
     $$('.mc-tab').forEach(function(tab) {
       tab.addEventListener('click', function() {
         var tabName = this.getAttribute('data-tab');
-        // 更新tab高亮
         $$('.mc-tab').forEach(function(t) { t.classList.remove('active'); });
         this.classList.add('active');
-        // 切换面板
         $$('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
         if (tabName === 'machines') {
           $('#home-machines-grid').classList.add('active');
@@ -352,13 +363,84 @@
         }
       });
     });
-    // 默认显示生电科技
     $('#home-machines-grid').classList.add('active');
     $('#home-buildings-grid').classList.remove('active');
 
-    // 材质包与光影
+    // 绑定卡片点击
+    bindCardClicks();
+  }
+
+  /* 渲染教程区（含版本筛选） */
+  var currentTutorialVersion = 'all';
+  function renderHomeTutorials() {
+    var allVersions = [];
+    MC_DATA.tutorials.forEach(function(t) {
+      var v = t.version.replace(/\+$/, '').replace(/^(\d+\.\d+).*/, '$1');
+      if (allVersions.indexOf(v) === -1) allVersions.push(v);
+    });
+    allVersions.sort(function(a, b) { return parseFloat(b) - parseFloat(a); });
+
+    var chipHtml = '<span class="version-chip' + (currentTutorialVersion === 'all' ? ' active' : '') + '" data-v="all">全部版本</span>';
+    allVersions.forEach(function(v) {
+      chipHtml += '<span class="version-chip' + (currentTutorialVersion === v ? ' active' : '') + '" data-v="' + v + '">MC ' + v + '</span>';
+    });
+    $('#version-filters-tutorials').innerHTML = chipHtml;
+
+    $$('#version-filters-tutorials .version-chip').forEach(function(chip) {
+      chip.addEventListener('click', function() {
+        currentTutorialVersion = this.getAttribute('data-v');
+        renderHomeTutorials();
+      });
+    });
+
+    var machines = MC_DATA.tutorials.filter(function(t) {
+      if (t.category !== 'machine') return false;
+      if (currentTutorialVersion !== 'all' && t.version.indexOf(currentTutorialVersion) === -1) return false;
+      return true;
+    });
+    var buildings = MC_DATA.tutorials.filter(function(t) {
+      if (t.category !== 'building') return false;
+      if (currentTutorialVersion !== 'all' && t.version.indexOf(currentTutorialVersion) === -1) return false;
+      return true;
+    });
+
+    var machineHtml = '';
+    machines.forEach(function(t) { machineHtml += renderCard(t); });
+    $('#home-machines-grid').innerHTML = machineHtml;
+
+    var buildingHtml = '';
+    buildings.forEach(function(t) { buildingHtml += renderCard(t); });
+    $('#home-buildings-grid').innerHTML = buildingHtml;
+
+    bindCardClicks();
+  }
+
+  /* 渲染资源区（含版本筛选） */
+  var currentResourceVersion = 'all';
+  function renderHomeResources() {
+    var allVersions = [];
+    MC_DATA.resources.forEach(function(r) {
+      var v = r.version.replace(/\+$/, '').replace(/^(\d+\.\d+).*/, '$1');
+      if (allVersions.indexOf(v) === -1) allVersions.push(v);
+    });
+    allVersions.sort(function(a, b) { return parseFloat(b) - parseFloat(a); });
+
+    var chipHtml = '<span class="version-chip' + (currentResourceVersion === 'all' ? ' active' : '') + '" data-v="all">全部版本</span>';
+    allVersions.forEach(function(v) {
+      chipHtml += '<span class="version-chip' + (currentResourceVersion === v ? ' active' : '') + '" data-v="' + v + '">MC ' + v + '</span>';
+    });
+    $('#version-filters-resources').innerHTML = chipHtml;
+
+    $$('#version-filters-resources .version-chip').forEach(function(chip) {
+      chip.addEventListener('click', function() {
+        currentResourceVersion = this.getAttribute('data-v');
+        renderHomeResources();
+      });
+    });
+
     var resHtml = '';
     MC_DATA.resources.forEach(function(r) {
+      if (currentResourceVersion !== 'all' && r.version.indexOf(currentResourceVersion) === -1) return;
       resHtml += renderResourceCard(r);
     });
     $('#home-resources-grid').innerHTML = resHtml;
@@ -378,9 +460,6 @@
         }, 1200);
       });
     });
-
-    // 绑定卡片点击
-    bindCardClicks();
   }
 
   /* 渲染资源卡片 */

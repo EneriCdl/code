@@ -28,19 +28,22 @@
   }, { passive: true });
   updateScrollVars();
 
-  /* ---- 平滑锚点滚动 (兼容回退) ---- */
+  /* ---- 平滑锚点滚动 (双RAF确保布局完成) ---- */
   window.smoothScrollTo = function(targetEl, offset) {
     offset = offset || 0;
-    if (typeof targetEl === 'string') targetEl = document.querySelector(targetEl);
+    if (typeof targetEl === 'string') targetEl = document.getElementById(targetEl.replace('#', '')) || document.querySelector(targetEl);
     if (!targetEl) return;
-    try {
-      targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      if (offset) window.scrollBy({ top: offset, behavior: 'smooth' });
-    } catch(e) {
-      // 回退
-      var rect = targetEl.getBoundingClientRect();
-      window.scrollTo({ top: window.scrollY + rect.top - offset, behavior: 'smooth' });
-    }
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        try {
+          var rect = targetEl.getBoundingClientRect();
+          if (rect.height === 0) return;
+          window.scrollTo({ top: window.scrollY + rect.top - offset, behavior: 'smooth' });
+        } catch(e) {
+          // 静默
+        }
+      });
+    });
   };
 
   /* ---- 像素震动动画 ---- */

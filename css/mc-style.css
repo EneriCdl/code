@@ -1657,3 +1657,36 @@ body::before {
     gap: 6px;
   }
 }
+
+/* ============================================================
+   版本筛选芯片
+   ============================================================ */
+.version-filters {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+  margin-top: -8px;
+}
+.version-chip {
+  padding: 5px 12px;
+  background: rgba(50,50,50,0.8);
+  border: 2px solid #2a2a2a;
+  color: #999;
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  cursor: pointer;
+  transition: all 0.06s ease;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+}
+.version-chip:hover {
+  background: rgba(70,70,70,0.9);
+  border-color: #5a5a5a;
+  color: #ddd;
+}
+.version-chip.active {
+  background: #5b5ba0;
+  border-color: #7b7bc0;
+  color: #fff;
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.15), 0 0 8px rgba(91,91,160,0.3);
+}

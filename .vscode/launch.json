@@ -1,0 +1,45 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Cortex Debug (OpenOCD)",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/${workspaceFolderBasename}.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "configFiles": [
+                "${workspaceFolder}/openocd.cfg"
+            ],
+            "device": "STM32F407VG",
+            "svdFile": "",
+            "runToEntryPoint": "main",
+            "preLaunchTask": "Build STM32",
+            "postDebugTask": "",
+            "showDevDebugOutput": "raw",
+            "rttConfig": {
+                "enabled": true,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "port": 0,
+                        "type": "console"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Cortex Debug (ST-Link)",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/${workspaceFolderBasename}.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "stlink",
+            "device": "STM32F407VG",
+            "svdFile": "",
+            "runToEntryPoint": "main",
+            "preLaunchTask": "Build STM32",
+            "showDevDebugOutput": "raw"
+        }
+    ]
+}

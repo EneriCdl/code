@@ -1,0 +1,20 @@
+{
+    "cmake.configureOnOpen": true,
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.generator": "MinGW Makefiles",
+    "cmake.environment": {
+        "PATH": "C:/Users/xuzhi/arm-toolchain/arm-gnu-toolchain-13.3.rel1-mingw-w64-i686-arm-none-eabi/bin;${env:PATH}"
+    },
+    "cmake.cmakePath": "cmake",
+    "cortex-debug.openocdPath": "C:/Users/xuzhi/arm-toolchain/xpack-openocd-0.12.0-1/bin/openocd.exe",
+    "cortex-debug.armToolchainPath": "C:/Users/xuzhi/arm-toolchain/arm-gnu-toolchain-13.3.rel1-mingw-w64-i686-arm-none-eabi/bin",
+    "files.associations": {
+        "*.h": "c",
+        "*.c": "c",
+        "*.cpp": "cpp",
+        "*.s": "arm-assembly",
+        "*.ld": "linker-script"
+    },
+    "editor.formatOnSave": false,
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json"
+}

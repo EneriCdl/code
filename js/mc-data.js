@@ -940,6 +940,102 @@ const MC_DATA = {
         "物品展示框展示食材",
         "海晶灯照明和植物点缀"
       ]
+    },
+    // ==================== 更多机器 & 建筑 ====================
+    {
+      id: "flower-farm",
+      name: "1.21.4 全花种刷花机",
+      category: "machine",
+      icon: "🌻",
+      description: "利用骨粉+侦测器的全自动刷花机，可批量生产所有16种花朵和染料。搭配发射器和漏斗实现全自动收集，建筑装饰和染料生产必备。",
+      materials: ["骨粉 ×64", "草地 ×8", "侦测器 ×4", "发射器 ×4", "漏斗 ×6", "箱子 ×2", "红石比较器 ×1", "红石粉 ×8"],
+      difficulty: "easy",
+      version: "1.21.4",
+      bilibiliSearch: "我的世界 刷花机 全自动 花朵 农场 教程 1.21",
+      tags: ["刷花", "花朵", "染料", "自动", "1.21"],
+      steps: [
+        "铺设草地平台（8×8）",
+        "安装侦测器检测花朵生长",
+        "侦测器触发发射器使用骨粉催花",
+        "下方漏斗收集掉落花朵",
+        "连接到箱子存储系统"
+      ]
+    },
+    {
+      id: "snow-farm",
+      name: "1.21.4 刷雪机/雪块农场",
+      category: "machine",
+      icon: "❄️",
+      description: "利用雪傀儡+侦测器的全自动雪球/雪块农场。雪傀儡在封闭空间内生成雪层，侦测器检测后自动采集，产出雪球可用于合成雪块。",
+      materials: ["雪傀儡 ×1", "侦测器 ×4", "活塞 ×4", "漏斗 ×4", "箱子 ×2", "红石粉 ×8", "方块 ×16", "南瓜 ×1"],
+      difficulty: "easy",
+      version: "1.21.4",
+      bilibiliSearch: "我的世界 刷雪机 雪球 自动 教程 1.21",
+      tags: ["刷雪", "雪球", "雪块", "自动", "简单"],
+      steps: [
+        "搭建封闭空间（3×3×3）",
+        "在内部生成雪傀儡",
+        "在雪傀儡脚下安装侦测器",
+        "侦测器检测雪层触发活塞收割",
+        "漏斗收集雪球至箱子"
+      ]
+    },
+    {
+      id: "villager-trading-hall",
+      name: "1.21.4 村民交易中心/打折大厅",
+      category: "building",
+      icon: "🏪",
+      description: "大型村民交易大厅，将多个图书管理员、工具匠、盔甲匠等职业村民集中管理。配合僵尸打折机制，可将交易价格降至最低（1绿宝石）。",
+      materials: ["村民 ×20", "工作方块 ×20", "床 ×20", "玻璃 ×64", "橡木木板 ×64", "漏斗 ×4", "箱子 ×8", "矿车 ×2", "铁轨 ×16"],
+      difficulty: "hard",
+      version: "1.21.4",
+      bilibiliSearch: "我的世界 村民交易中心 打折 大厅 教程 1.21",
+      tags: ["村民", "交易", "打折", "高级", "1.21"],
+      steps: [
+        "规划交易大厅布局（建议长16×宽10）",
+        "为每个村民建造独立隔间（1×1空间+活板门）",
+        "前方放置对应工作方块",
+        "引入僵尸打折机制（僵尸恐吓后村民降价）",
+        "铺设矿车轨道用于快速运输村民"
+      ]
+    },
+    {
+      id: "squid-farm",
+      name: "1.21.4 鱿鱼农场/墨囊机",
+      category: "machine",
+      icon: "🦑",
+      description: "河流群系建造的鱿鱼农场，利用鱿鱼在河流生物群系自然生成的机制。全自动收集墨囊和荧光墨囊，是建筑染色和发光展示框的核心材料来源。",
+      materials: ["水桶 ×16", "灵魂沙 ×4", "岩浆块 ×4", "漏斗 ×6", "箱子 ×2", "栅栏 ×8", "萤石 ×8"],
+      difficulty: "easy",
+      version: "1.21.4",
+      bilibiliSearch: "我的世界 鱿鱼农场 墨囊 自动 教程",
+      tags: ["鱿鱼", "墨囊", "自动", "河流", "简单"],
+      steps: [
+        "在河流群系选择合适位置",
+        "挖掘大水池（8×8×3深）",
+        "使用灵魂沙产生气泡柱推送鱿鱼",
+        "顶部岩浆块击杀收集",
+        "漏斗收集墨囊"
+      ]
+    },
+    {
+      id: "glow-lichen-farm",
+      name: "1.21.4 发光地衣农场",
+      category: "machine",
+      icon: "✨",
+      description: "利用骨粉催熟+侦测器收割的发光地衣农场。发光地衣是1.17+新增的装饰性光源方块，可再生绿色染料。适合地下和洞穴风格建筑。",
+      materials: ["骨粉 ×32", "侦测器 ×4", "发射器 ×4", "活塞 ×4", "漏斗 ×6", "箱子 ×2", "红石比较器 ×1", "圆石 ×32"],
+      difficulty: "easy",
+      version: "1.21.4",
+      bilibiliSearch: "我的世界 发光地衣 农场 教程 1.21",
+      tags: ["发光地衣", "光源", "装饰", "自动"],
+      steps: [
+        "搭建石墙种植面（8×6）",
+        "在石墙上种植发光地衣",
+        "安装发射器使用骨粉催熟",
+        "侦测器检测后触发活塞收割",
+        "漏斗收集系统"
+      ]
     }
   ],
 
@@ -1102,6 +1198,54 @@ const MC_DATA = {
       downloadUrl: "https://www.curseforge.com/minecraft/texture-packs/xekr-square-texture",
       downloadLabel: "CurseForge 下载",
       rating: "★4.8"
+    },
+    {
+      id: "complementary-reimagined",
+      name: "Complementary Reimagined",
+      type: "shader",
+      icon: "🌠",
+      description: "Complementary Shaders的完全重制版，重写核心渲染管线。光照更真实、水面反射更细腻、体积雾效果极佳。支持PBR材质，画面表现力顶级。",
+      version: "1.21.4",
+      tags: ["光影", "重制", "高端", "PBR", "体积雾"],
+      downloadUrl: "https://www.curseforge.com/minecraft/customization/complementary-reimagined",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.9"
+    },
+    {
+      id: "photon-shader",
+      name: "Photon Shader",
+      type: "shader",
+      icon: "💫",
+      description: "新兴热门光影包，以极佳的性能优化著称。中配显卡即可获得接近高端光影的视觉效果。光照色调偏暖，黄昏和日出效果尤为出色。",
+      version: "1.21.4",
+      tags: ["光影", "高性能", "暖色调", "中配友好"],
+      downloadUrl: "https://www.curseforge.com/minecraft/customization/photon-shader",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.7"
+    },
+    {
+      id: "solas-shader",
+      name: "Solas Shader",
+      type: "shader",
+      icon: "🌤️",
+      description: "以电影级体积云和大气散射闻名的光影包。天空表现力在MC光影中首屈一指，彩虹、极光等特殊天象效果令人惊叹。适合风景党。",
+      version: "1.21.4",
+      tags: ["光影", "体积云", "天空", "电影级"],
+      downloadUrl: "https://www.curseforge.com/minecraft/customization/solas-shader",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.8"
+    },
+    {
+      id: "kappashader",
+      name: "Kappa Shader",
+      type: "shader",
+      icon: "🌙",
+      description: "日系风格光影包，柔和的色调和细腻的阴影处理使其成为建筑拍摄的首选。水面效果清澈，夜景灯光温暖，整体画面唯美。",
+      version: "1.21.4",
+      tags: ["光影", "日系", "柔和", "建筑拍摄"],
+      downloadUrl: "https://www.curseforge.com/minecraft/customization/kappa-shader",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.6"
     }
   ],
 
