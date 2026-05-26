@@ -360,14 +360,16 @@
   function renderResourceCard(r) {
     var typeLabel = r.type === 'resource-pack' ? '材质包' : '光影';
     var typeClass = r.type === 'resource-pack' ? 'pack' : 'shader';
+    var featuredHtml = r.featured ? '<span class="rc-featured-badge">⭐ ' + (r.featuredLabel || '推荐') + '</span>' : '';
     var tagsHtml = '';
     r.tags.slice(0, 3).forEach(function(tag) {
       tagsHtml += '<span class="rc-tag">' + escapeHtml(tag) + '</span>';
     });
     return '' +
-      '<div class="resource-card">' +
+      '<div class="resource-card' + (r.featured ? ' featured' : '') + '">' +
         '<div class="rc-topbar">' +
           '<span class="rc-type-badge ' + typeClass + '">' + typeLabel + '</span>' +
+          (r.featured ? featuredHtml : '') +
           '<span class="mc-badge version">' + r.version + '</span>' +
           '<span class="rc-rating">' + r.rating + '</span>' +
         '</div>' +

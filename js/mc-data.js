@@ -946,6 +946,20 @@ const MC_DATA = {
   /** 材质包与光影资源 */
   resources: [
     {
+      id: "stay-true",
+      name: "Stay True",
+      type: "resource-pack",
+      icon: "🌟",
+      description: "保留原版MC灵魂的轻量级材质包，不改变基础色调和风格，而是为每种方块添加连接纹理和随机变体。草方块、泥土、石头等方块不再单调重复，自然过渡效果极佳。低配友好、颜值在线。",
+      version: "1.21.4",
+      tags: ["材质包", "原版风格", "连接纹理", "低配友好", "作者推荐"],
+      downloadUrl: "https://www.curseforge.com/minecraft/texture-packs/stay-true",
+      downloadLabel: "CurseForge 下载",
+      rating: "★4.9",
+      featured: true,
+      featuredLabel: "网页作者推荐"
+    },
+    {
       id: "faithful-32x",
       name: "Faithful 32x",
       type: "resource-pack",

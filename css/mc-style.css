@@ -1436,3 +1436,28 @@ body::before {
   .resource-card .rc-body { flex-direction: column; align-items: center; text-align: center; }
   .resource-card .rc-icon { width: 48px; height: 48px; font-size: 26px; }
 }
+
+/* 作者推荐徽章 */
+.rc-featured-badge {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  padding: 3px 8px;
+  background: linear-gradient(135deg, #c8960c, #e8b820);
+  border: 2px solid #1a1a1a;
+  color: #fff;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+  animation: featuredGlow 2s ease-in-out infinite;
+  white-space: nowrap;
+}
+@keyframes featuredGlow {
+  0%, 100% { box-shadow: 0 0 4px rgba(232,184,32,0.3); }
+  50% { box-shadow: 0 0 12px rgba(232,184,32,0.6); }
+}
+.resource-card.featured {
+  border-color: #c8960c;
+  box-shadow: inset 2px 2px 0 rgba(255,255,255,0.15), inset -2px -2px 0 rgba(0,0,0,0.35), 0 0 12px rgba(200,150,12,0.2);
+}
+.resource-card.featured:hover {
+  border-color: #e8b820;
+  box-shadow: inset 2px 2px 0 rgba(255,255,255,0.2), inset -2px -2px 0 rgba(0,0,0,0.35), 0 8px 0 rgba(0,0,0,0.25), 0 0 28px rgba(232,184,32,0.25);
+}
